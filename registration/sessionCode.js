@@ -13,7 +13,7 @@ async function sessionCode(arrCode){
         from: 'TP - Take a Photo',
         to: `${arrCode[2]}`,
         subject: 'Код авторизации',
-        text: `Вот ваш код - ${arrCode[3]}`
+        text: `Вот ваш код - ${arrCode[4]}`
     }
     await transporter.sendMail(mailOptions, function (error, info) {
         if (error) {

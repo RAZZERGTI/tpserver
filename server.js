@@ -16,7 +16,7 @@ app.get('/api/checkCode?', async function(req, res) {
     try{
         let url = `${req.originalUrl}`
         const confirmCode = await createUser.confirmCode(url)
-        res.send(confirmCode)
+        res.send('Добавил')
     } catch(e) {
         console.log(e)
     }
