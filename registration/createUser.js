@@ -1,5 +1,10 @@
 const db = require('../database/db')
 const session = require('../registration/sessionCode')
+const {mailMessages} = require("../mail/MailMessages");
+function randomInteger(min, max) {
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(rand);
+}
 async function registrationUser(href){
     let reg = /\/\w+\/\w+\?([a-z]+)=([a-z\d]+)&([a-z]+)=([a-z\d-]+\.*[a-z\d_-]+@[a-z]+.[a-z]+)&([a-z]+)=([A-Za-z\d]+)/i
     let result = href.match(reg)
@@ -10,12 +15,8 @@ async function registrationUser(href){
     if (user){
         return `Пользователь с таким именем уже существует`
     } else {
-        function randomInteger(min, max) {
-            let rand = min - 0.5 + Math.random() * (max - min + 1);
-            return Math.round(rand);
-        }
-        let code = randomInteger(10000, 99999)
         let idUser = randomInteger(100000000, 999999999)
+        let code = randomInteger(10000, 99999)
         const arrCode = [idUser, `${name}`,`${mail}`,`${password}`,code]
         const sessCode = await session.sessionCode(arrCode)
         return {
@@ -45,7 +46,48 @@ async function confirmCode(href){
         return `Код не совпадает`
     }
 }
+async function ReductionPassword(href) {
+    let reg = /\/\w+\/\w+\??(\w+)?=?(\w+@\w+.\w+)?&?(\w+)?=?(\d+)?(\w+)?/i
+    let result = href.match(reg)
+    console.log(result)
+    let generateCode = randomInteger(10000, 99999)
+    let mail = result[2]
+    let hrefCode = result[4]
+    let password = result[5]
+    if (hrefCode != null){
+        const checkSessRedCode = await db.checkSessReductionCode(mail,hrefCode)
+        if (checkSessRedCode){
+            return {status: true, code:'coincided'}
+        } else{
+            return {status: false, code:'did not match'}
+        }
+    }
+    else if(password != null){
+        const checkSessRedCode = await db.checkSessReductionMail(mail)
+        if (checkSessRedCode){
+            const delSessRedCode = await db.deleteSessReductionCode(mail)
+            const update = await db.updatePassword(mail,password)
+            return {status: 'OK', password: 'edited'}
+        } else{
+            return {status: 'Error', mail: 'did not match'}
+        }
+    }
+    else if(mail == null){
+        return {status: 'Error', template: 'incorrect'}
+    }
+    else{
+        const checkDb = await db.checkWithMail(mail)
+        if (checkDb){
+            const mailMess = await mailMessages(mail, generateCode)
+            const sessRed = await db.sessionReduction([mail,generateCode])
+            return {status: true, mail: `${mail}`, code: 'sent'}
+        } else {
+            return {status: false, mail: `${mail}`}
+        }
+    }
+}
 module.exports = {
     registrationUser,
-    confirmCode
+    confirmCode,
+    ReductionPassword
 }
