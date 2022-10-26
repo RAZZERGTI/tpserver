@@ -1,19 +1,25 @@
 const mysql = require('mysql2');
 const connection = mysql.createConnection({
-    host : "localhost",
-    user : "root",
-    password : "Ob#102030",
-    database : "tpmobile",
-    port: 3306,
     // host : "localhost",
     // user : "root",
-    // password : "root",
-    // database : "user1026_tp",
+    // password : "Ob#102030",
+    // database : "tpmobile",
     // port: 3306,
+    host : "localhost",
+    user : "root",
+    password : "root",
+    database : "user1026_tp",
+    port: 3306,
 })
 async function checkDbUser(name){
     let res = await new Promise((res, rej) =>
         connection.query(`SELECT * FROM users WHERE name='${name}'`,
+            (err, results) => err ? rej(err) : res(results)))
+    return res.length > 0;
+}
+async function checkDbMail(mail){
+    let res = await new Promise((res, rej) =>
+        connection.query(`SELECT * FROM users WHERE mail='${mail}'`,
             (err, results) => err ? rej(err) : res(results)))
     return res.length > 0;
 }
@@ -75,6 +81,12 @@ async function updatePassword(mail,password){
         connection.query(`UPDATE users SET password ='${password}' WHERE mail='${mail}'`,
             (err, results) => err ? rej(err) : res(results)))
 }
+async function checkDbUserAuth(name, password){
+    let res = await new Promise((res, rej) =>
+        connection.query(`SELECT * FROM users WHERE name='${name}' AND password='${password}'`,
+            (err, results) => err ? rej(err) : res(results)))
+    return res.length > 0;
+}
 module.exports = {
     checkDbUser,
     createDbCode,
@@ -86,5 +98,7 @@ module.exports = {
     checkSessReductionCode,
     checkSessReductionMail,
     deleteSessReductionCode,
-    updatePassword
+    updatePassword,
+    checkDbMail,
+    checkDbUserAuth
 }

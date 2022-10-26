@@ -4,6 +4,10 @@ const port = 3001;
 const pid = process.pid
 
 const createUser = require('./registration/createUser');
+const authUser = require('./authorization/authUser')
+const confirmCode = require('./registration/confirmCode')
+const reduction = require('./registration/ReductionPassword')
+
 app.get('/api/registration?', async function(req, res) {
     try{
         let url = `${req.originalUrl}`
@@ -11,27 +15,43 @@ app.get('/api/registration?', async function(req, res) {
         res.send(create)
     } catch(e) {
         console.log(e)
+        return {status: '400 Bad Request'}
     }
 });
+
+app.get('/api/authorization?', async function(req, res) {
+    try{
+        let url = `${req.originalUrl}`
+        const auth = await authUser.authUser(url)
+        res.send(auth)
+    } catch(e) {
+        console.log(e)
+        return {status: '400 Bad Request'}
+    }
+});
+
 app.get('/api/checkCode?', async function(req, res) {
     try{
         let url = `${req.originalUrl}`
-        const confirmCode = await createUser.confirmCode(url)
-        res.send('Добавил')
+        const confirmCoding = await confirmCode.confirmCode(url)
+        res.send(confirmCoding)
     } catch(e) {
         console.log(e)
+        return {status: '400 Bad Request'}
     }
 });
 
 app.get('/api/reductionPassword?', async function(req, res){
     try{
         let url = `${req.originalUrl}`
-        const redPass = await createUser.ReductionPassword(url)
+        const redPass = await reduction.ReductionPassword(url)
         res.send(redPass)
     } catch(e) {
         console.log(e)
+        return {status: '400 Bad Request'}
     }
 })
+
 app.listen(port, () => {
     console.log(`\nServer started ${port}...\nPID - ${pid}`)
 })
