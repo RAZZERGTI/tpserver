@@ -1,10 +1,18 @@
 const mysql = require('mysql2');
 const connection = mysql.createConnection({
+<<<<<<< HEAD
     host : "localhost",
     user : "root",
     password : "Ob#102030",
     database : "tpmobile",
     port: 3306,
+=======
+     host : "localhost",
+     user : "root",
+     password : "Ob#102030",
+     database : "tpmobile",
+     port: 3306,
+>>>>>>> 058ba323366d13b6484b66d8ef455015b71bd750
     // host : "localhost",
     // user : "root",
     // password : "root",
