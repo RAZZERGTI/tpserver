@@ -56,8 +56,8 @@ async function registrationUser(href){
             }
         }
         else{
-            let session = await db.sessionCheckDbUser(name)
-            if(session) {
+            let sessionCheck = await db.sessionCheckDbUser(name)
+            if(sessionCheck) {
                 return {"error": {
                     "statusCode": 401,
                     "name": "unAuthorized",
