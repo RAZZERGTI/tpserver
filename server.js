@@ -14,8 +14,12 @@ app.get('/api/registration?', async function(req, res) {
         const create = await createUser.registrationUser(url)
         res.send(create)
     } catch(e) {
-        console.log(e)
-        return {status: '400 Bad Request'}
+        return {
+            "error": {
+            "statusCode": 500,
+                "name": "Internal Server Error",
+                "message": `${e}`
+        }}
     }
 });
 
@@ -25,8 +29,12 @@ app.get('/api/authorization?', async function(req, res) {
         const auth = await authUser.authUser(url)
         res.send(auth)
     } catch(e) {
-        console.log(e)
-        return {status: '400 Bad Request'}
+        return {
+            "error": {
+                "statusCode": 500,
+                "name": "Internal Server Error",
+                "message": `${e}`
+            }}
     }
 });
 
@@ -36,8 +44,12 @@ app.get('/api/checkCode?', async function(req, res) {
         const confirmCoding = await confirmCode.confirmCode(url)
         res.send(confirmCoding)
     } catch(e) {
-        console.log(e)
-        return {status: '400 Bad Request'}
+        return {
+            "error": {
+                "statusCode": 500,
+                "name": "Internal Server Error",
+                "message": `${e}`
+            }}
     }
 });
 
@@ -47,8 +59,12 @@ app.get('/api/reductionPassword?', async function(req, res){
         const redPass = await reduction.ReductionPassword(url)
         res.send(redPass)
     } catch(e) {
-        console.log(e)
-        return {status: '400 Bad Request'}
+        return {
+            "error": {
+                "statusCode": 500,
+                "name": "Internal Server Error",
+                "message": `${e}`
+            }}
     }
 })
 

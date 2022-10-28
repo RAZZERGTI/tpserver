@@ -12,9 +12,13 @@ async function ReductionPassword(href) {
     if (hrefCode != null){
         const checkSessRedCode = await db.checkSessReductionCode(mail,hrefCode)
         if (checkSessRedCode){
-            return {status: '200 OK', code:'coincided'}
+            return {response: true, description:'coincided'}
         } else{
-            return {status: '205 Reset Content', code:'did not match'}
+            return {"error": {
+                "statusCode": 401,
+                    "name": "unAuthorized",
+                    "message": 'did not match'
+            }}
         }
     }
     else if(password != null){
@@ -22,22 +26,33 @@ async function ReductionPassword(href) {
         if (checkSessRedCode){
             const delSessRedCode = await db.deleteSessReductionCode(mail)
             const update = await db.updatePassword(mail,password)
-            return {status: '200 OK', password: 'edited'}
+            return {response: true, description:'edited'}
         } else{
-            return {status: '205 Reset Content', mail: 'did not match'}
+            return {"error": {
+                    "statusCode": 401,
+                    "name": "unAuthorized",
+                    "message": 'did not match'
+                }}
         }
     }
     else if(mail == null){
-        return {status: '205 Reset Content', template: 'incorrect'}
+        return {"error": {
+                "statusCode": 400,
+                "name": "Bad request",
+                "message": 'incorrect request'
+            }}
     }
     else{
         const checkDb = await db.checkWithMail(mail)
         if (checkDb){
             const mailMess = await mailMessages(mail, generateCode)
             const sessRed = await db.sessionReduction([mail,generateCode])
-            return {status: '200 OK', mail: `${mail}`, code: 'sent'}
+            return {response: true, mail: `${mail}`, code: 'sent'}
         } else {
-            return {status: '205 Reset Content', mail: `${mail}`}
+            return {"error": {
+                    "statusCode": 401,
+                    "name": "unAuthorized"
+                }}
         }
     }
 }

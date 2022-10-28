@@ -1,25 +1,37 @@
 const mysql = require('mysql2');
 const connection = mysql.createConnection({
-    // host : "localhost",
-    // user : "root",
-    // password : "Ob#102030",
-    // database : "tpmobile",
-    // port: 3306,
     host : "localhost",
     user : "root",
-    password : "root",
-    database : "user1026_tp",
+    password : "Ob#102030",
+    database : "tpmobile",
     port: 3306,
+    // host : "localhost",
+    // user : "root",
+    // password : "root",
+    // database : "user1026_tp",
+    // port: 3306,
 })
-async function checkDbUser(name){
+async function usersCheckDbUser(name){
     let res = await new Promise((res, rej) =>
         connection.query(`SELECT * FROM users WHERE name='${name}'`,
             (err, results) => err ? rej(err) : res(results)))
     return res.length > 0;
 }
-async function checkDbMail(mail){
+async function usersCheckDbMail(mail){
     let res = await new Promise((res, rej) =>
         connection.query(`SELECT * FROM users WHERE mail='${mail}'`,
+            (err, results) => err ? rej(err) : res(results)))
+    return res.length > 0;
+}
+async function sessionCheckDbUser(name){
+    let res = await new Promise((res, rej) =>
+        connection.query(`SELECT * FROM session WHERE name='${name}'`,
+            (err, results) => err ? rej(err) : res(results)))
+    return res.length > 0;
+}
+async function sessionCheckDbMail(mail){
+    let res = await new Promise((res, rej) =>
+        connection.query(`SELECT * FROM session WHERE mail='${mail}'`,
             (err, results) => err ? rej(err) : res(results)))
     return res.length > 0;
 }
@@ -85,10 +97,13 @@ async function checkDbUserAuth(name, password){
     let res = await new Promise((res, rej) =>
         connection.query(`SELECT * FROM users WHERE name='${name}' AND password='${password}'`,
             (err, results) => err ? rej(err) : res(results)))
-    return res.length > 0;
+    return res[0];
 }
 module.exports = {
-    checkDbUser,
+    usersCheckDbUser,
+    usersCheckDbMail,
+    sessionCheckDbUser,
+    sessionCheckDbMail,
     createDbCode,
     checkDbCode,
     deleteDbCode,
@@ -99,6 +114,5 @@ module.exports = {
     checkSessReductionMail,
     deleteSessReductionCode,
     updatePassword,
-    checkDbMail,
     checkDbUserAuth
 }

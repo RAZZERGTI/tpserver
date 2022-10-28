@@ -8,7 +8,7 @@ async function sessionCode(arrCode){
         await db.deleteDbCode(arrCode)
     }
     //3 Minutes
-    setTimeout(deleteCode, 180000);
+    setTimeout(deleteCode, 900000);
 }
 
 module.exports = {
