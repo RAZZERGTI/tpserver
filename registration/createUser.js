@@ -56,14 +56,24 @@ async function registrationUser(href){
             }
         }
         else{
-            let idUser = randomInteger(100000000, 999999999)
-            let code = randomInteger(10000, 99999)
-            const arrCode = [idUser, `${name}`, `${mail}`, `${password}`, code]
-            const sessCode = await session.sessionCode(arrCode)
-            return {
-                id: idUser,
-                name: name,
-                mail: mail
+            let session = await db.sessionCheckDbUser(name)
+            if(session) {
+                return {"error": {
+                    "statusCode": 401,
+                    "name": "unAuthorized",
+                    "message": 'user already in session'
+                }}
+            }
+            else{
+                let idUser = randomInteger(100000000, 999999999)
+                let code = randomInteger(10000, 99999)
+                const arrCode = [idUser, `${name}`, `${mail}`, `${password}`, code]
+                const sessCode = await session.sessionCode(arrCode)
+                return {
+                    id: idUser,
+                    name: name,
+                    mail: mail
+                }
             }
         }
     }
