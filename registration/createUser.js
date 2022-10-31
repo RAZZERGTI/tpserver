@@ -69,8 +69,29 @@ async function registrationUser(href){
             }
         }
         else{
+<<<<<<< HEAD
             return {
                 response: true
+=======
+            let sessionCheck = await db.sessionCheckDbUser(name)
+            if(sessionCheck) {
+                return {"error": {
+                    "statusCode": 401,
+                    "name": "unAuthorized",
+                    "message": 'user already in session'
+                }}
+            }
+            else{
+                let idUser = randomInteger(100000000, 999999999)
+                let code = randomInteger(10000, 99999)
+                const arrCode = [idUser, `${name}`, `${mail}`, `${password}`, code]
+                const sessCode = await session.sessionCode(arrCode)
+                return {
+                    id: idUser,
+                    name: name,
+                    mail: mail
+                }
+>>>>>>> 5569d54e6730cb011dcef224581a0c79ae0ef2c1
             }
         }
     }
