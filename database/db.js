@@ -1,15 +1,15 @@
 const mysql = require('mysql2');
 const connection = mysql.createConnection({
-    // host : "localhost",
-    // user : "root",
-    // password : "Ob#102030",
-    // database : "tpmobile",
-    // port: 3306,
     host : "localhost",
     user : "root",
-    password : "root",
-    database : "user1026_tp",
+    password : "Ob#102030",
+    database : "tpmobile",
     port: 3306,
+    // host : "localhost",
+    // user : "root",
+    // password : "root",
+    // database : "user1026_tp",
+    // port: 3306,
 })
 async function usersCheckDbUser(name){
     let res = await new Promise((res, rej) =>
@@ -99,7 +99,14 @@ async function checkDbUserAuth(name, password){
             (err, results) => err ? rej(err) : res(results)))
     return res[0];
 }
+async function checkDbMailAuth(mail, password){
+    let res = await new Promise((res, rej) =>
+        connection.query(`SELECT * FROM users WHERE mail='${mail}' AND password='${password}'`,
+            (err, results) => err ? rej(err) : res(results)))
+    return res[0];
+}
 module.exports = {
+    checkDbMailAuth,
     usersCheckDbUser,
     usersCheckDbMail,
     sessionCheckDbUser,

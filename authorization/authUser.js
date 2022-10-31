@@ -1,36 +1,51 @@
 const db = require("../database/db");
 
 async function authUser(href){
-    let reg = /\/\w+\/\w+\?\w+=([a-z\d]+)&\w+=([a-z\d]+)/i
-    let result = href.match(reg)
-    if (result == null){
+    let validationNameAndMail = /\/\w+\/\w+\?([a-z]+)?=(\w+@?\w+\.?\w+)?&?(\w+)?=?(\w+)?/i
+    let resultRegular = href.match(validationNameAndMail)
+    console.log(resultRegular)
+    let nameOrMail = resultRegular[2]
+    let password = resultRegular[4]
+    if (resultRegular == null) {
         return {
             "error": {
                 "statusCode": 400,
                 "name": "Bad request",
                 "message": 'fields are empty'
-            }}
-    } else{
-        let name = result[1]
-        let password = result[2]
-        let user = await db.checkDbUserAuth(name, password)
-        if (user){
+            }
+        }
+    }
+    else if (resultRegular[1] === 'name') {
+        let user = await db.checkDbUserAuth(nameOrMail, password)
+        if (user) {
             return {
                 response: {
-                    id:user.id,
+                    id: user.id,
                     name: user.name,
                     mail: user.mail
                 }
             }
         }
-        else{
-            return{
-                "error": {
+    }
+    else if(resultRegular[1] === 'mail') {
+        let mail = await db.checkDbMailAuth(nameOrMail, password)
+        if (mail) {
+            return {
+                response: {
+                    id: mail.id,
+                    name: mail.name,
+                    mail: mail.mail
+                }
+            }
+        }
+    }
+    else {
+        return{
+            "error": {
                 "statusCode": 401,
                 "name": "unAuthorized",
                 "message": 'user and password did not match'
             }}
-        }
     }
 }
 
