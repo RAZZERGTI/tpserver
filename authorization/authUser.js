@@ -15,14 +15,20 @@ async function authUser(href){
         let password = result[2]
         let user = await db.checkDbUserAuth(name, password)
         if (user){
-            return {id:user.id, name: user.name, mail: user.mail}
+            return {
+                response: {
+                    id:user.id,
+                    name: user.name,
+                    mail: user.mail
+                }
+            }
         }
         else{
             return{
                 "error": {
                 "statusCode": 401,
-                    "name": "unAuthorized",
-                    "message": 'user and password did not match'
+                "name": "unAuthorized",
+                "message": 'user and password did not match'
             }}
         }
     }

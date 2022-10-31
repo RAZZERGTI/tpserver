@@ -12,7 +12,8 @@ async function ReductionPassword(href) {
     if (hrefCode != null){
         const checkSessRedCode = await db.checkSessReductionCode(mail,hrefCode)
         if (checkSessRedCode){
-            return {response: true, description:'coincided'}
+            return {response: true}
+            // return {response: true, description:'coincided'}
         } else{
             return {"error": {
                 "statusCode": 401,
@@ -26,6 +27,7 @@ async function ReductionPassword(href) {
         if (checkSessRedCode){
             const delSessRedCode = await db.deleteSessReductionCode(mail)
             const update = await db.updatePassword(mail,password)
+            // return {response: true, description:'edited'}
             return {response: true, description:'edited'}
         } else{
             return {"error": {
@@ -47,7 +49,8 @@ async function ReductionPassword(href) {
         if (checkDb){
             const mailMess = await mailMessages(mail, generateCode)
             const sessRed = await db.sessionReduction([mail,generateCode])
-            return {response: true, mail: `${mail}`, code: 'sent'}
+            return {response: true}
+            // return {response: true, mail: `${mail}`, code: 'sent'}
         } else {
             return {"error": {
                     "statusCode": 401,
