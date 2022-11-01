@@ -27,7 +27,8 @@ async function registrationUser(href){
                 let idUser = randomInteger(100000000, 999999999)
                 let code = randomInteger(10000, 99999)
                 const arrCode = [idUser, `${name}`, `${mail}`, `${password}`, code]
-                const sessCode = await session.sessionCode(arrCode)
+                const createDbCode = await db.createDbCode(arrCode)
+                const sessCode = await session.sessionCode('registration','mail',mail, code)
                 return {
                     response: {
                         id: idUser,

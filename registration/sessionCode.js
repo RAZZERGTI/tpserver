@@ -1,11 +1,10 @@
 const db = require('../database/db')
 const registrationMailMessage = require('../mail/MailMessages')
 
-async function sessionCode(arrCode){
-    const createDbCode = await db.createDbCode(arrCode)
-    const regMail = await registrationMailMessage.mailMessages(arrCode[2], arrCode[4])
+async function sessionCode(table,row,mail,code){
+    const regMail = await registrationMailMessage.mailMessages(mail, code)
     async function deleteCode() {
-        await db.deleteDbCode(arrCode)
+        await db.deleteDbCode(table,row,mail)
     }
     //3 Minutes
     setTimeout(deleteCode, 900000);

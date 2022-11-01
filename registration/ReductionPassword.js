@@ -48,7 +48,7 @@ async function ReductionPassword(href) {
         const checkDb = await db.checkWithMail(mail)
         if (checkDb){
             const mailMess = await mailMessages(mail, generateCode)
-            const sessRed = await db.sessionReduction([mail,generateCode])
+            const sessRed = await db.createSessionTable('reduction',[mail,generateCode])
             return {response: true}
             // return {response: true, mail: `${mail}`, code: 'sent'}
         } else {

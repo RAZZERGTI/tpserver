@@ -25,24 +25,24 @@ async function usersCheckDbMail(mail){
 }
 async function sessionCheckDbUser(name){
     let res = await new Promise((res, rej) =>
-        connection.query(`SELECT * FROM session WHERE name='${name}'`,
+        connection.query(`SELECT * FROM registration WHERE name='${name}'`,
             (err, results) => err ? rej(err) : res(results)))
     return res.length > 0;
 }
 async function sessionCheckDbMail(mail){
     let res = await new Promise((res, rej) =>
-        connection.query(`SELECT * FROM session WHERE mail='${mail}'`,
+        connection.query(`SELECT * FROM registration WHERE mail='${mail}'`,
             (err, results) => err ? rej(err) : res(results)))
     return res.length > 0;
 }
 async function createDbCode(arrCode) {
     let res = await new Promise((res, rej) =>
-        connection.query(`INSERT INTO session(id, name, mail, password, code) VALUES (?, ?, ?, ?, ?)`,arrCode,
+        connection.query(`INSERT INTO registration(id, name, mail, password, code) VALUES (?, ?, ?, ?, ?)`,arrCode,
             (err, results) => err ? rej(err) : res(results)))
 }
 async function checkDbCode(id){
     let res = await new Promise((res, rej) =>
-        connection.query(`SELECT * FROM session WHERE id=${id}`,
+        connection.query(`SELECT * FROM registration WHERE id=${id}`,
             (err, results) => err ? rej(err) : res(results)))
     return res[0];
 }
@@ -54,8 +54,8 @@ async function recordingUser(arr){
     });
 }
 
-async function deleteDbCode(arrCode){
-    const sql = `DELETE FROM session WHERE id = ${arrCode[0]}`;
+async function deleteDbCode(table,row,value){
+    const sql = `DELETE FROM ${table} WHERE ${row} = '${value}'`;
     connection.query(sql, function(err, results) {
 
     });
@@ -66,9 +66,9 @@ async function checkWithMail(mail){
             (err, results) => err ? rej(err) : res(results)))
     return res.length > 0;
 }
-async function sessionReduction([mail, code]){
+async function createSessionTable(table,[mail, code]){
     let res = await new Promise((res, rej) =>
-        connection.query(`INSERT INTO reduction(mail, code) VALUES (?, ?)`,[mail, code],
+        connection.query(`INSERT INTO ${table}(mail, code) VALUES (?, ?)`,[mail, code],
             (err, results) => err ? rej(err) : res(results)))
 }
 async function checkSessReductionCode(mail,code){
@@ -93,20 +93,20 @@ async function updatePassword(mail,password){
         connection.query(`UPDATE users SET password ='${password}' WHERE mail='${mail}'`,
             (err, results) => err ? rej(err) : res(results)))
 }
-async function checkDbUserAuth(name, password){
+async function checkDbUserAuth(row, nameOrMail, password){
     let res = await new Promise((res, rej) =>
-        connection.query(`SELECT * FROM users WHERE name='${name}' AND password='${password}'`,
+        connection.query(`SELECT * FROM users WHERE ${row}='${nameOrMail}' AND password='${password}'`,
             (err, results) => err ? rej(err) : res(results)))
     return res[0];
 }
-async function checkDbMailAuth(mail, password){
+async function returnCodeAuth(value){
     let res = await new Promise((res, rej) =>
-        connection.query(`SELECT * FROM users WHERE mail='${mail}' AND password='${password}'`,
+        connection.query(`SELECT * FROM authorization WHERE mail='${value}'`,
             (err, results) => err ? rej(err) : res(results)))
     return res[0];
 }
 module.exports = {
-    checkDbMailAuth,
+    returnCodeAuth,
     usersCheckDbUser,
     usersCheckDbMail,
     sessionCheckDbUser,
@@ -116,7 +116,7 @@ module.exports = {
     deleteDbCode,
     recordingUser,
     checkWithMail,
-    sessionReduction,
+    createSessionTable,
     checkSessReductionCode,
     checkSessReductionMail,
     deleteSessReductionCode,

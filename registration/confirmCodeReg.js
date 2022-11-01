@@ -1,6 +1,6 @@
 const db = require("../database/db");
 
-async function confirmCode(href){
+async function confirmCodeReg(href){
     let pattern = /\/\w+\/\w+\?([a-z]+)=(\d+)&([a-z]+)=(\d+)/i
     let result = href.match(pattern)
     if (result == null){
@@ -25,7 +25,7 @@ async function confirmCode(href){
             let array = [sessCode.id, sessCode.name, sessCode.mail, sessCode.password]
             if (`${sessCode.code}` === code && `${sessCode.id}` === id) {
                 const record = await db.recordingUser(array)
-                const del = await db.deleteDbCode(array)
+                const del = await db.deleteDbCode('registration','mail',sessCode.mail)
                 return {response: true}
             } else {
                 return {response: false}
@@ -35,5 +35,5 @@ async function confirmCode(href){
 }
 
 module.exports = {
-    confirmCode
+    confirmCodeReg
 }

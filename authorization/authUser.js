@@ -1,9 +1,12 @@
 const db = require("../database/db");
+const mailMessage = require('../mail/MailMessages')
+const createCode = require('../registration/createUser')
+const session = require("../registration/sessionCode");
+const confirmCodeAuth = require('./confirmCodeAuth')
 
-async function authUser(href){
+async function authUser(href) {
     let validationNameAndMail = /\/\w+\/\w+\?([a-z]+)?=(\w+@?\w+\.?\w+)?&?(\w+)?=?(\w+)?/i
     let resultRegular = href.match(validationNameAndMail)
-    console.log(resultRegular)
     let nameOrMail = resultRegular[2]
     let password = resultRegular[4]
     if (resultRegular == null) {
@@ -16,8 +19,11 @@ async function authUser(href){
         }
     }
     else if (resultRegular[1] === 'name') {
-        let user = await db.checkDbUserAuth(nameOrMail, password)
+        let user = await db.checkDbUserAuth('name', nameOrMail, password)
         if (user) {
+            let code = createCode.randomInteger(10000, 99999)
+            const sessCode = await session.sessionCode('registration', 'mail', user.mail, code)
+            let authSession = await db.createSessionTable('authorization', [user.mail, code])
             return {
                 response: {
                     id: user.id,
@@ -25,17 +31,41 @@ async function authUser(href){
                     mail: user.mail
                 }
             }
+        } else{
+            return {
+                "error": {
+                    "statusCode": 401,
+                    "name": "unAuthorized",
+                    "message": 'user and password did not match'
+                }
+            }
         }
     }
     else if(resultRegular[1] === 'mail') {
-        let mail = await db.checkDbMailAuth(nameOrMail, password)
-        if (mail) {
-            return {
-                response: {
-                    id: mail.id,
-                    name: mail.name,
-                    mail: mail.mail
+        if(resultRegular[3] === 'code'){
+            return await confirmCodeAuth.confirmCodeAuth(resultRegular)
+        }
+        else{
+            let mailCheck = await db.checkDbUserAuth('mail',nameOrMail, password)
+            if (mailCheck) {
+                let code = createCode.randomInteger(10000, 99999)
+                const mailMess = await mailMessage.mailMessages(mailCheck.mail, code)
+                let authSession = await db.createSessionTable('authorization',[mailCheck.mail, code])
+                return {
+                    response: {
+                        id: mailCheck.id,
+                        name: mailCheck.name,
+                        mail: mailCheck.mail
+                    }
                 }
+            }
+            else{
+                return{
+                    "error": {
+                        "statusCode": 401,
+                        "name": "unAuthorized",
+                        "message": 'user and password did not match'
+                    }}
             }
         }
     }

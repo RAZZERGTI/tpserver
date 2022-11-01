@@ -5,7 +5,7 @@ const pid = process.pid
 
 const createUser = require('./registration/createUser');
 const authUser = require('./authorization/authUser')
-const confirmCode = require('./registration/confirmCode')
+const confirmCodeReg = require('./registration/confirmCodeReg')
 const reduction = require('./registration/ReductionPassword')
 
 app.get('/api/registration?', async function(req, res) {
@@ -41,7 +41,7 @@ app.get('/api/authorization?', async function(req, res) {
 app.get('/api/checkCode?', async function(req, res) {
     try{
         let url = `${req.originalUrl}`
-        const confirmCoding = await confirmCode.confirmCode(url)
+        const confirmCoding = await confirmCodeReg.confirmCodeReg(url)
         res.send(confirmCoding)
     } catch(e) {
         return {
