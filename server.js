@@ -6,7 +6,8 @@ const pid = process.pid
 const createUser = require('./registration/createUser');
 const authUser = require('./authorization/authUser')
 const confirmCodeReg = require('./registration/confirmCodeReg')
-const reduction = require('./registration/ReductionPassword')
+const reduction = require('./reduction/ReductionPassword')
+const repeatCode = require('./repeat/repeatCode')
 
 app.get('/api/registration?', async function(req, res) {
     try{
@@ -56,7 +57,7 @@ app.get('/api/checkCode?', async function(req, res) {
 app.get('/api/reductionPassword?', async function(req, res){
     try{
         let url = `${req.originalUrl}`
-        const redPass = await reduction.ReductionPassword(url)
+        const redPass = await reduction.reductionPassword(url)
         res.send(redPass)
     } catch(e) {
         return {
@@ -68,6 +69,20 @@ app.get('/api/reductionPassword?', async function(req, res){
     }
 })
 
+app.get('/api/repeatCode?', async function(req, res){
+    try{
+        let url = `${req.originalUrl}`
+        const repeat = await repeatCode.repeatCode(url)
+        res.send(repeat)
+    } catch(e) {
+        return {
+            "error": {
+                "statusCode": 500,
+                "name": "Internal Server Error",
+                "message": `${e}`
+            }}
+    }
+})
 app.listen(port, () => {
     console.log(`\nServer started ${port}...\nPID - ${pid}`)
 })

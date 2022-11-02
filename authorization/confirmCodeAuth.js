@@ -3,8 +3,8 @@ const db = require("../database/db");
 async function confirmCodeAuth(resultHref){
     let mail = resultHref[2]
     let code = resultHref[4]
-    let dbCode = await db.returnCodeAuth(mail)
-    if (dbCode){
+    let dbCode = await db.returnCode('authorization', 'mail',mail)
+    if (dbCode != null){
         if (Number(code) === dbCode.code){
             let deleteCode = await db.deleteDbCode('authorization','mail',mail)
             return{
