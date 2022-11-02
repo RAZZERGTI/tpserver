@@ -15,7 +15,7 @@ async function registrationUser(href){
         let mail = result[4]
         let password = result[6]
         if (password != null){
-            let sessionCheck = await db.sessionCheckDbUser(name)
+            let sessionCheck = await db.infoCheckDb('registration','name',name)
             if (sessionCheck){
                 return {"error": {
                         "statusCode": 401,
@@ -47,8 +47,8 @@ async function registrationUser(href){
             }}
         }
         else {
-            let users = await db.usersCheckDbUser(info)
-            let session = await db.sessionCheckDbUser(info)
+            let users = await db.infoCheckDb('users','name',info)
+            let session = await db.infoCheckDb('registration','name',info)
             if (users || session){
                 return {
                     response: false
@@ -62,8 +62,8 @@ async function registrationUser(href){
         }
     }
     else if(resultRegular[1] === 'mail'){
-        let users = await db.usersCheckDbMail(info)
-        let session = await db.sessionCheckDbMail(info)
+        let users = await db.infoCheckDb('users','mail',info)
+        let session = await db.infoCheckDb('registration','mail',info)
         if (users || session){
             return {
                 response: false

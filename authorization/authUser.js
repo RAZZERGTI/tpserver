@@ -20,26 +20,39 @@ async function authUser(href) {
     }
     else if (resultRegular[1] === 'name') {
         let user = await db.checkDbUserAuth('name', nameOrMail, password)
-        if (user) {
-            let code = createCode.randomInteger(10000, 99999)
-            const sessCode = await session.sessionCode('registration', 'mail', user.mail, code)
-            let authSession = await db.createSessionTable('authorization', [user.mail, code])
-            return {
-                response: {
-                    id: user.id,
-                    name: user.name,
-                    mail: user.mail
-                }
-            }
-        } else{
+        let inAuth = await db.infoCheckDb('authorization','mail', user.mail)
+        if (inAuth){
             return {
                 "error": {
                     "statusCode": 401,
-                    "name": "unAuthorized",
-                    "message": 'user and password did not match'
+                    "name": "Authorized",
+                    "message": 'user already in session'
                 }
             }
         }
+        else{
+            if (user) {
+                let code = createCode.randomInteger(10000, 99999)
+                const sessCode = await session.sessionCode('registration', 'mail', user.mail, code)
+                let authSession = await db.createSessionTable('authorization', [user.mail, code])
+                return {
+                    response: {
+                        id: user.id,
+                        name: user.name,
+                        mail: user.mail
+                    }
+                }
+            } else{
+                return {
+                    "error": {
+                        "statusCode": 401,
+                        "name": "unAuthorized",
+                        "message": 'user and password did not match'
+                    }
+                }
+            }
+        }
+
     }
     else if(resultRegular[1] === 'mail') {
         if(resultRegular[3] === 'code'){
@@ -47,25 +60,37 @@ async function authUser(href) {
         }
         else{
             let mailCheck = await db.checkDbUserAuth('mail',nameOrMail, password)
-            if (mailCheck) {
-                let code = createCode.randomInteger(10000, 99999)
-                const mailMess = await mailMessage.mailMessages(mailCheck.mail, code)
-                let authSession = await db.createSessionTable('authorization',[mailCheck.mail, code])
+            let inAuth = await db.infoCheckDb('authorization','mail', nameOrMail)
+            if (inAuth){
                 return {
-                    response: {
-                        id: mailCheck.id,
-                        name: mailCheck.name,
-                        mail: mailCheck.mail
+                    "error": {
+                        "statusCode": 401,
+                        "name": "Authorized",
+                        "message": 'user already in session'
                     }
                 }
             }
             else{
-                return{
-                    "error": {
-                        "statusCode": 401,
-                        "name": "unAuthorized",
-                        "message": 'user and password did not match'
-                    }}
+                if (mailCheck) {
+                    let code = createCode.randomInteger(10000, 99999)
+                    const mailMess = await mailMessage.mailMessages(mailCheck.mail, code)
+                    let authSession = await db.createSessionTable('authorization',[mailCheck.mail, code])
+                    return {
+                        response: {
+                            id: mailCheck.id,
+                            name: mailCheck.name,
+                            mail: mailCheck.mail
+                        }
+                    }
+                }
+                else{
+                    return{
+                        "error": {
+                            "statusCode": 401,
+                            "name": "unAuthorized",
+                            "message": 'user and password did not match'
+                        }}
+                }
             }
         }
     }

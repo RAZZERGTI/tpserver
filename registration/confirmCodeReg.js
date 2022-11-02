@@ -14,7 +14,7 @@ async function confirmCodeReg(href){
     else {
         let id = result[2]
         let code = result[4]
-        let sessCode = await db.checkDbCode(id)
+        let sessCode = await db.returnCode('registration','id', id)
         if (sessCode == null) {
             return {"error": {
                 "statusCode": 401,
