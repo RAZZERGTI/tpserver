@@ -1,15 +1,15 @@
 const mysql = require('mysql2');
 const connection = mysql.createConnection({
-    // host : "localhost",
-    // user : "root",
-    // password : "Ob#102030",
-    // database : "tpmobile",
-    // port: 3306,
     host : "localhost",
     user : "root",
-    password : "root",
-    database : "user1026_tp",
+    password : "Ob#102030",
+    database : "tpmobile",
     port: 3306,
+//     host : "localhost",
+//     user : "root",
+//     password : "root",
+//     database : "user1026_tp",
+//     port: 3306,
 })
 async function infoCheckDb(table,nameOrMail, value){
     let res = await new Promise((res, rej) =>
