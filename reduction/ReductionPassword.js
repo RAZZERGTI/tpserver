@@ -56,13 +56,14 @@ async function reductionPassword(href) {
 		const checkDb = await db.infoCheckDb('users', 'mail', mail)
 		let inRed = await db.infoCheckDb('reduction', 'mail', mail)
 		if (inRed) {
-			return {
-				error: {
-					statusCode: 401,
-					name: 'Authorized',
-					message: 'user already in session'
-				}
-			}
+			const mailMess = await mailMessages(mail, generateCode)
+			const update = await db.updateField(
+				'reduction',
+				'code',
+				generateCode,
+				mail
+			)
+			return { response: true }
 		} else {
 			if (checkDb) {
 				const mailMess = await mailMessages(mail, generateCode)
