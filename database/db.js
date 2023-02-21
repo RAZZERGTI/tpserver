@@ -4,9 +4,9 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASSWORD
 const connection = mysql.createConnection({
-	host: 'dbHost',
-	user: 'dbUser',
-	password: 'dbPassword',
+	host: dbHost,
+	user: dbUser,
+	password: dbPassword,
 	database: 'tpmobile',
 	port: 3306
 	// host: 'localhost',
