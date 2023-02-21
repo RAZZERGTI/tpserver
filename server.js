@@ -10,7 +10,9 @@ const authUser = require('./authorization/authUser')
 const confirmCodeReg = require('./registration/confirmCodeReg')
 const reduction = require('./reduction/reductionPassword')
 const repeatCode = require('./repeat/repeatCode')
-// const ex = require('./example-post')
+const albums = require('./albums/getAlbums')
+const uploadPhoto = require('./mega/upload-photo')
+// const example = require('./example-post')
 
 app.get('/api/registration?', async function (req, res) {
 	try {
@@ -91,12 +93,26 @@ app.get('/api/repeatCode?', async function (req, res) {
 		}
 	}
 })
-
+app.get('/api/albums?', async function (req, res) {
+	try {
+		let url = `${req.originalUrl}`
+		const getAlbums = albums.getAlbums(url)
+		res.send(getAlbums)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
 app.post('/photo?', upload.single('photo'), function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
 		console.log(url)
-		res.send('File uploaded')
+		res.send({ response: true })
 	} catch (e) {
 		return {
 			error: {
