@@ -1,8 +1,12 @@
 const mysql = require('mysql2')
+require('dotenv').config()
+const dbHost = process.env.DB_HOST
+const dbUser = process.env.DB_USER
+const dbPassword = process.env.DB_PASSWORD
 const connection = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: 'Ob#102030',
+	host: 'dbHost',
+	user: 'dbUser',
+	password: 'dbPassword',
 	database: 'tpmobile',
 	port: 3306
 	// host: 'localhost',
@@ -40,14 +44,6 @@ async function checkSessReductionCode(mail, code) {
 	)
 	return res.length > 0
 }
-
-// async function checkReduction(nameOrMail,value){
-//     let res = await new Promise((res, rej) =>
-//         connection.query(`SELECT * FROM reduction WHERE ${nameOrMail}='${value}'`,
-//             (err, results) => err ? rej(err) : res(results)))
-//     return res.length > 0;
-/// }
-/////////////////////////////////////////////////////////////////////////////////
 
 //INSERTS
 async function createSessionTable(table, [mail, code]) {
@@ -104,7 +100,6 @@ async function checkDbUserAuth(row, nameOrMail, password) {
 module.exports = {
 	infoCheckDb,
 	returnCode,
-	// checkReduction,
 	createDbCode,
 	deleteDbCode,
 	recordingUser,
