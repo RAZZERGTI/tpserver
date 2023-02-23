@@ -4,34 +4,54 @@ const fs = require('fs')
 const megaGmail = process.env.MEGA_GMAIL
 const megaPass = process.env.MEGA_PASS
 
-const storage = new mega.Storage(
-	{ email: megaGmail, password: megaPass },
-	() => {
-		console.log('ready to work')
+async function connectToMega() {
+	return new Promise((resolve, reject) => {
+		const storage = new mega.Storage(
+			{ email: megaGmail, password: megaPass },
+			() => {
+				console.log('Connected to Mega Cloud Storage')
+				resolve(storage)
+			}
+		)
+	})
+}
+async function uploadPhoto(storage) {
+	fs.readdir('images', (err, files) => {
+		if (err) {
+			console.log(err)
+		} else {
+			let path = `images/${files[0]}`
+			uploadFile(path)
+			setTimeout(deleteFile, 3000, path)
+		}
+	})
+	const uploadFile = async path => {
+		return new Promise((resolve, reject) => {
+			const file = { name: `photo.jpg`, size: 100, path: path }
+			const upload = storage.upload({ name: file.name, size: file.size })
+			const readStream = fs.createReadStream(file.path)
+			readStream.pipe(upload)
+			resolve(path)
+		})
 	}
-)
-let array = []
-fs.readdir('images', (err, files) => {
-	if (err) {
-		console.log(err)
-	} else {
-		array.push(files)
-		setTimeout(uploadFile, 7000, `images/${array[0]}`)
+	const deleteFile = path => {
+		fs.unlink(path, err => {
+			if (err) {
+				console.log(err)
+			} else {
+				console.log('File deleted!')
+			}
+		})
 	}
-})
+}
 
 const createFolder = nameFolder => {
 	storage.mkdir(`${nameFolder}`).then(folder => console.log(folder))
 	return true
 }
-const uploadFile = path => {
-	const file = { name: `photo.jpg`, size: 100, path: path }
-	const upload = storage.upload({ name: file.name, size: file.size })
-	const readStream = fs.createReadStream(file.path)
-	readStream.pipe(upload)
-	array = []
-}
 
 module.exports = {
-	createFolder
+	createFolder,
+	uploadPhoto,
+	connectToMega
 }

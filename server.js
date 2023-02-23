@@ -11,8 +11,8 @@ const confirmCodeReg = require('./registration/confirmCodeReg')
 const reduction = require('./reduction/reductionPassword')
 const repeatCode = require('./repeat/repeatCode')
 const albums = require('./albums/getAlbums')
-// const uploadPhoto = require('./mega/upload-photo')
 const example = require('./example-post')
+const uploadPhoto = require('./mega/upload-photo')
 
 app.get('/api/registration?', async function (req, res) {
 	try {
@@ -108,10 +108,11 @@ app.get('/api/albums?', async function (req, res) {
 		}
 	}
 })
-app.post('/photo?', upload.single('photo'), function (req, res) {
+app.post('/photo?', upload.single('photo'), async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
 		console.log(url)
+		uploadPhoto.uploadPhoto(await uploadPhoto.connectToMega())
 		res.send({ response: true })
 	} catch (e) {
 		return {
