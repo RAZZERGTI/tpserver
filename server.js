@@ -112,7 +112,7 @@ app.post('/photo?', upload.single('photo'), async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
 		console.log(url)
-		uploadPhoto.uploadPhoto(await uploadPhoto.connectToMega())
+		await uploadPhoto.uploadPhoto(await uploadPhoto.connectToMega())
 		res.send({ response: true })
 	} catch (e) {
 		return {
