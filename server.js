@@ -11,7 +11,7 @@ const confirmCodeReg = require('./registration/confirmCodeReg')
 const reduction = require('./reduction/reductionPassword')
 const repeatCode = require('./repeat/repeatCode')
 const albums = require('./albums/getAlbums')
-const example = require('./example-post')
+// const example = require('./example-post')
 const uploadPhoto = require('./mega/upload-photo')
 
 app.get('/api/registration?', async function (req, res) {
