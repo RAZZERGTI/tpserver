@@ -8,7 +8,7 @@ formData.append('photo', fileStream)
 
 axios
 	.post(
-		'http://localhost:3001/photo?id_user=123213&id_album=123123',
+		'http://188.212.124.120:3001/photo?id_user=123213&id_album=123123',
 		formData,
 		{
 			headers: formData.getHeaders()
