@@ -17,6 +17,7 @@
     "form-data": "^4.0.0",
     "fs": "^0.0.1-security",
     "git": "^0.1.5",
+    "mega": "^0.2.0",
     "megajs": "^1.1.1",
     "mongodb": "^4.10.0",
     "multer": "^1.4.5-lts.1",

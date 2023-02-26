@@ -20,18 +20,21 @@ async function uploadPhoto(storage) {
 		if (err) {
 			console.log(err)
 		} else {
+			console.log(files[0])
 			let path = `images/${files[0]}`
-			uploadFile(path)
-			setTimeout(deleteFile, 3000, path)
+			console.log(path)
+			let data = fs.readFileSync(path)
+			console.log(data)
+			uploadFile(files[0], path)
+			setTimeout(deleteFile, 2000, path)
 		}
 	})
-	const uploadFile = async path => {
+	const uploadFile = async (name, path) => {
 		return new Promise((resolve, reject) => {
-			const file = { name: `photo.jpg`, size: 100, path: path }
+			const file = { name: name, size: 100, path: path }
 			const upload = storage.upload({ name: file.name, size: file.size })
 			const readStream = fs.createReadStream(file.path)
 			readStream.pipe(upload)
-			resolve(path)
 		})
 	}
 	const deleteFile = path => {

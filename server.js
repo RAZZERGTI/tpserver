@@ -3,7 +3,28 @@ const app = express()
 const port = 3001
 const pid = process.pid
 const multer = require('multer')
-const upload = multer({ dest: 'images/' })
+
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, './images')
+	},
+	filename: function (req, file, cb) {
+		cb(null, Date.now() + '-' + file.originalname)
+	}
+})
+const upload = multer({
+	storage: storage,
+	fileFilter: function (req, file, cb) {
+		if (
+			file.mimetype !== 'image/png' &&
+			file.mimetype !== 'image/jpg' &&
+			file.mimetype !== 'image/jpeg'
+		) {
+			return cb(new Error('Only image files are allowed!'))
+		}
+		cb(null, true)
+	}
+})
 
 const createUser = require('./registration/createUser')
 const authUser = require('./authorization/authUser')
@@ -11,8 +32,6 @@ const confirmCodeReg = require('./registration/confirmCodeReg')
 const reduction = require('./reduction/reductionPassword')
 const repeatCode = require('./repeat/repeatCode')
 const albums = require('./albums/getAlbums')
-// const example = require('./example-post')
-const uploadPhoto = require('./mega/upload-photo')
 
 app.get('/api/registration?', async function (req, res) {
 	try {
@@ -108,11 +127,15 @@ app.get('/api/albums?', async function (req, res) {
 		}
 	}
 })
+const uploadPhoto = require('./mega/upload-photo')
+// const example = require('./example-post')
+// const downloadPhoto = require('./mega/download-photo')
 app.post('/photo?', upload.single('photo'), async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
 		console.log(url)
 		await uploadPhoto.uploadPhoto(await uploadPhoto.connectToMega())
+		// await downloadPhoto.download(await uploadPhoto.connectToMega())
 		res.send({ response: true })
 	} catch (e) {
 		return {
