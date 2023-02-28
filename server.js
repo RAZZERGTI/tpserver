@@ -6,15 +6,18 @@ const multer = require('multer')
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
+		console.log('File Dest - ', file)
 		cb(null, './images')
 	},
 	filename: function (req, file, cb) {
+		console.log('File fN - ', file)
 		cb(null, Date.now() + '-' + file.originalname)
 	}
 })
 const upload = multer({
 	storage: storage,
 	fileFilter: function (req, file, cb) {
+		console.log('File fF - ', file)
 		if (
 			file.mimetype !== 'image/png' &&
 			file.mimetype !== 'image/jpg' &&
@@ -129,11 +132,13 @@ app.get('/api/albums?', async function (req, res) {
 })
 const uploadPhoto = require('./mega/upload-photo')
 // const example = require('./example-post')
+// const example = require('./postec')
 // const downloadPhoto = require('./mega/download-photo')
 app.post('/photo?', upload.single('photo'), async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
 		console.log(url)
+		albums.getAlbums(url)
 		await uploadPhoto.uploadPhoto(await uploadPhoto.connectToMega())
 		// await downloadPhoto.download(await uploadPhoto.connectToMega())
 		res.send({ response: true })
