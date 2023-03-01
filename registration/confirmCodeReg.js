@@ -1,5 +1,4 @@
 const db = require('../database/db')
-const createFolder = require('../mega/upload-photo')
 
 async function confirmCodeReg(href) {
 	let pattern = /\/\w+\/\w+\?([a-z]+)=(\d+)&([a-z]+)=(\d+)/i
@@ -28,7 +27,7 @@ async function confirmCodeReg(href) {
 			let array = [sessCode.id, sessCode.name, sessCode.mail, sessCode.password]
 			if (`${sessCode.code}` === code && `${sessCode.id}` === id) {
 				const record = await db.recordingUser(array)
-				const createFolderMega = createFolder.createFolder(sessCode.id)
+				//const createFolderMega = createFolder.createFolder(sessCode.id)
 				const del = await db.deleteDbCode('registration', 'mail', sessCode.mail)
 				return { response: true }
 			} else {
