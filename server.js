@@ -2,32 +2,39 @@ const express = require('express')
 const app = express()
 const port = 3001
 const pid = process.pid
-const multer = require('multer')
-
-const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
-		console.log('File Dest - ', file)
-		cb(null, './images')
-	},
-	filename: function (req, file, cb) {
-		console.log('File fN - ', file)
-		cb(null, Date.now() + '-' + file.originalname)
-	}
-})
-const upload = multer({
-	storage: storage,
-	fileFilter: function (req, file, cb) {
-		console.log('File fF - ', file)
-		if (
-			file.mimetype !== 'image/png' &&
-			file.mimetype !== 'image/jpg' &&
-			file.mimetype !== 'image/jpeg'
-		) {
-			return cb(new Error('Only image files are allowed!'))
-		}
-		cb(null, true)
-	}
-})
+// const multer = require('multer')
+//
+// const storage = multer.diskStorage({
+// 	destination: function (req, file, cb) {
+// 		cb(null, 'uploads/')
+// 	},
+// 	filename: function (req, file, cb) {
+// 		const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+// 		cb(
+// 			null,
+// 			file.fieldname +
+// 				'-' +
+// 				uniqueSuffix +
+// 				'.' +
+// 				file.originalname.split('.').pop()
+// 		)
+// 	}
+// })
+//
+// const upload = multer({
+// 	storage: storage,
+// 	fileFilter: function (req, file, cb) {
+// 		const filetypes = /jpeg|jpg|png|gif/ // разрешенные расширения файлов
+// 		const mimetype = filetypes.test(file.mimetype)
+// 		const extname = filetypes.test(
+// 			path.extname(file.originalname).toLowerCase()
+// 		)
+// 		if (mimetype && extname) {
+// 			return cb(null, true)
+// 		}
+// 		cb('Ошибка: Разрешенные расширения файлов: ' + filetypes)
+// 	}
+// })
 
 const createUser = require('./registration/createUser')
 const authUser = require('./authorization/authUser')
@@ -134,22 +141,23 @@ const uploadPhoto = require('./mega/upload-photo')
 // const example = require('./example-post')
 // const example = require('./postec')
 // const downloadPhoto = require('./mega/download-photo')
-app.post('/photo?', upload.single('photo'), async function (req, res) {
-	try {
-		let url = `${req.originalUrl}`
-		console.log(url)
-		albums.getAlbums(url)
-		await uploadPhoto.uploadPhoto(await uploadPhoto.connectToMega())
-		// await downloadPhoto.download(await uploadPhoto.connectToMega())
-		res.send({ response: true })
-	} catch (e) {
-		return {
-			error: {
-				statusCode: 500,
-				name: 'Internal Server Error',
-				message: `${e}`
-			}
-		}
+const upload = require('./helpers/multer_config').upload
+app.post('/upload', upload.array('imageUploads', 10), (req, res) => {
+	const senderName = req.body.fromName
+	console.log('hello')
+	if (senderName == null) {
+		res.status(500).json({ error: `No senderName sent.` })
+		return
+	}
+
+	if (req.files == null) {
+		res.status(500).json({ error: `${senderName} - Image uploads not found.` })
+	} else if (req.files.length === 0) {
+		res.status(500).json({ error: `${senderName} - No images sent.` })
+	} else {
+		res
+			.status(200)
+			.json({ success: `${senderName} - ${req.files.length} images saved.` })
 	}
 })
 
