@@ -26,6 +26,7 @@ async function confirmCodeReg(href) {
 		} else {
 			let array = [sessCode.id, sessCode.name, sessCode.mail, sessCode.password]
 			if (`${sessCode.code}` === code && `${sessCode.id}` === id) {
+				console.log(`${sessCode.code} - ${code}`)
 				const record = await db.recordingUser(array)
 				const del = await db.deleteDbCode('registration', 'mail', sessCode.mail)
 				return { response: true }
