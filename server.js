@@ -148,9 +148,9 @@ app.post('/createAlbum', upload.array('imageUploads', 10), (req, res) => {
 	console.log('ReqBody - ', req.body)
 	let url = `${req.originalUrl}`
 	console.log('SenderName - ', senderName)
-	const albumName = req.body.AlbumName
-	console.log(albumName.id)
-	console.log(JSON.parse(albumName))
+	const albumNameLog = JSON.parse(req.body.AlbumName)
+	console.log('ID - ', albumNameLog.id)
+	console.log('AlbumName - ', albumNameLog.albumName)
 
 	if (senderName == null) {
 		res.status(500).json({ error: `No senderName sent.` })
