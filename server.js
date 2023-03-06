@@ -137,20 +137,27 @@ app.get('/api/albums?', async function (req, res) {
 		}
 	}
 })
-const uploadPhoto = require('./mega/upload-photo')
-const { json } = require('express')
+app.get('/loginZoho', async function (req, res) {
+	try {
+		console.log(res)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+// const uploadPhoto = require('./mega/upload-photo')
 // const example = require('./example-post')
 // const example = require('./postec')
 // const downloadPhoto = require('./mega/download-photo')
+const createAlbum = require('./albums/createAlbum')
 const upload = require('./helpers/multer_config').upload
 app.post('/createAlbum', upload.array('imageUploads', 10), (req, res) => {
 	const senderName = req.body.fromName
-	console.log('ReqBody - ', req.body)
-	let url = `${req.originalUrl}`
-	console.log('SenderName - ', senderName)
-	const albumNameLog = JSON.parse(req.body.AlbumName)
-	console.log('ID - ', albumNameLog.id)
-	console.log('AlbumName - ', albumNameLog.albumName)
 
 	if (senderName == null) {
 		res.status(500).json({ error: `No senderName sent.` })
@@ -162,6 +169,7 @@ app.post('/createAlbum', upload.array('imageUploads', 10), (req, res) => {
 	} else if (req.files.length === 0) {
 		res.status(500).json({ error: `${senderName} - No images sent.` })
 	} else {
+		createAlbum.createAlbum(req.body)
 		res.send({
 			response: true
 		})

@@ -1,21 +1,25 @@
 const axios = require('axios')
-const FormData = require('form-data')
-const fs = require('fs')
+require('dotenv').config()
+const username = process.env.TERA_GMAIL
+const password = process.env.TERA_PASS
 
-const url = 'http://localhost:3001/upload?'
-
-const formData = new FormData()
-formData.append('photo', fs.createReadStream('mostyk.jpeg'))
-
-axios
-	.post(url, formData, {
-		headers: {
-			...formData.getHeaders()
-		}
+const getToken = async () => {
+	return new Promise(async (resolve, reject) => {
+		const response = await axios.post(
+			'https://www.terabox.com/api/oauth/token',
+			{
+				grant_type: 'password',
+				username: username,
+				password: password
+			},
+			{
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}
+		)
+		console.log(response.data.access_token)
 	})
-	.then(response => {
-		console.log(response.data)
-	})
-	.catch(error => {
-		console.log(error)
-	})
+}
+const token = getToken()
+console.log(token)
