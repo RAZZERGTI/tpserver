@@ -144,7 +144,7 @@ const uploadPhoto = require('./mega/upload-photo')
 const upload = require('./helpers/multer_config').upload
 app.post('/upload', upload.array('imageUploads', 10), (req, res) => {
 	const senderName = req.body.fromName
-	console.log('hello')
+	console.log(senderName)
 	if (senderName == null) {
 		res.status(500).json({ error: `No senderName sent.` })
 		return
@@ -155,9 +155,9 @@ app.post('/upload', upload.array('imageUploads', 10), (req, res) => {
 	} else if (req.files.length === 0) {
 		res.status(500).json({ error: `${senderName} - No images sent.` })
 	} else {
-		res
-			.status(200)
-			.json({ success: `${senderName} - ${req.files.length} images saved.` })
+		res.send({
+			response: true
+		})
 	}
 })
 
