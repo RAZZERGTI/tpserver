@@ -142,7 +142,7 @@ const uploadPhoto = require('./mega/upload-photo')
 // const example = require('./postec')
 // const downloadPhoto = require('./mega/download-photo')
 const upload = require('./helpers/multer_config').upload
-app.post('/upload', upload.array('imageUploads', 10), (req, res) => {
+app.post('/createAlbum', upload.array('imageUploads', 10), (req, res) => {
 	const senderName = req.body.fromName
 	console.log('ReqBody - ', req.body)
 	let url = `${req.originalUrl}`
