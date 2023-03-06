@@ -138,6 +138,7 @@ app.get('/api/albums?', async function (req, res) {
 	}
 })
 const uploadPhoto = require('./mega/upload-photo')
+const { json } = require('express')
 // const example = require('./example-post')
 // const example = require('./postec')
 // const downloadPhoto = require('./mega/download-photo')
@@ -147,6 +148,10 @@ app.post('/createAlbum', upload.array('imageUploads', 10), (req, res) => {
 	console.log('ReqBody - ', req.body)
 	let url = `${req.originalUrl}`
 	console.log('SenderName - ', senderName)
+	const albumName = req.body.AlbumName
+	console.log(albumName.id)
+	console.log(JSON.parse(albumName))
+
 	if (senderName == null) {
 		res.status(500).json({ error: `No senderName sent.` })
 		return
