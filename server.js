@@ -2,39 +2,6 @@ const express = require('express')
 const app = express()
 const port = 3001
 const pid = process.pid
-// const multer = require('multer')
-//
-// const storage = multer.diskStorage({
-// 	destination: function (req, file, cb) {
-// 		cb(null, 'uploads/')
-// 	},
-// 	filename: function (req, file, cb) {
-// 		const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-// 		cb(
-// 			null,
-// 			file.fieldname +
-// 				'-' +
-// 				uniqueSuffix +
-// 				'.' +
-// 				file.originalname.split('.').pop()
-// 		)
-// 	}
-// })
-//
-// const upload = multer({
-// 	storage: storage,
-// 	fileFilter: function (req, file, cb) {
-// 		const filetypes = /jpeg|jpg|png|gif/ // разрешенные расширения файлов
-// 		const mimetype = filetypes.test(file.mimetype)
-// 		const extname = filetypes.test(
-// 			path.extname(file.originalname).toLowerCase()
-// 		)
-// 		if (mimetype && extname) {
-// 			return cb(null, true)
-// 		}
-// 		cb('Ошибка: Разрешенные расширения файлов: ' + filetypes)
-// 	}
-// })
 
 const createUser = require('./registration/createUser')
 const authUser = require('./authorization/authUser')
@@ -137,6 +104,7 @@ app.get('/api/albums?', async function (req, res) {
 		}
 	}
 })
+const zoho = require('./zoho/zoho')
 app.get('/loginZoho', async function (req, res) {
 	try {
 		console.log(res)
@@ -169,6 +137,7 @@ app.post('/createAlbum', upload.array('imageUploads', 10), (req, res) => {
 	} else if (req.files.length === 0) {
 		res.status(500).json({ error: `${senderName} - No images sent.` })
 	} else {
+		zoho.uploadPhoto()
 		createAlbum.createAlbum(req.body)
 		res.send({
 			response: true

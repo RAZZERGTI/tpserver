@@ -26,6 +26,7 @@
     "nodemailer": "^6.7.8",
     "nodemon": "^2.0.19",
     "path": "^0.12.7",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "zoho-workdrive-api": "^0.1.5"
   }
 }
