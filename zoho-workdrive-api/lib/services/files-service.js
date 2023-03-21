@@ -32,6 +32,14 @@ class filesService {
 			id,
 			type: 'files'
 		}))
+	IdArrMoveTrashMapper = idArr =>
+		idArr.map(id => ({
+			attributes: {
+				status: '51'
+			},
+			id,
+			type: 'files'
+		}))
 
 	async createFile(parentId, name, zFileType, token, domain) {
 		const body = {
@@ -58,7 +66,6 @@ class filesService {
 	async uploadFile(parentId, name, overrideNameExist, stream, token, domain) {
 		const fd = new FormData()
 		fd.append('content', stream)
-		console.log(fd)
 		const fetchParams = {
 			method: 'post',
 			url: `https://workdrive.zoho.${domain}/api/v1/upload?filename=${name}&parent_id=${parentId}&override-name-exist=${overrideNameExist}`,
@@ -74,10 +81,11 @@ class filesService {
 		const fetchParams = {
 			method: 'get',
 			url: `https://workdrive.zoho.${domain}/api/v1/download/${fileId}`,
+			// url: `https://download-accl.zoho.${domain}/v1/workdrive/download/${fileId}`,
 			headers: this.hWithAuth(token)
 		}
 		const { data } = await this.request(fetchParams)
-
+		// console.log(res)
 		return data
 	}
 
@@ -137,6 +145,23 @@ class filesService {
 		return data.data
 	}
 
+	async moveTrashFiles(idArr, token, domain) {
+		const body = {
+			data: this.IdArrMoveTrashMapper(idArr)
+		}
+
+		const fetchParams = {
+			method: 'patch',
+			url: `https://workdrive.zoho.${domain}/api/v1/files`,
+			headers: this.hWithAuth(token),
+			data: JSON.stringify(body)
+		}
+		const { data } = await this.request(fetchParams)
+		return data.data
+		// if (res.status === 204)
+		// 	return { message: `Files with id - ${idArr.join(', ')} was removed` }
+	}
+
 	async deleteFiles(idArr, token, domain) {
 		const body = {
 			data: this.IdArrDeleteMapper(idArr)
@@ -149,7 +174,7 @@ class filesService {
 			data: JSON.stringify(body)
 		}
 		const res = await this.request(fetchParams)
-		if (res.status === 204)
+		if (res.status === 200)
 			return { message: `Files with id - ${idArr.join(', ')} was removed` }
 	}
 

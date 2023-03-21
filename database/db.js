@@ -4,27 +4,35 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	host: dbHost,
-	user: dbUser,
-	password: dbPassword,
-	database: 'tpmobile',
-	port: 3306
-	// host: 'localhost',
-	// user: 'root',
-	// password: 'root',
-	// database: 'user1026_tp',
+	// host: dbHost,
+	// user: dbUser,
+	// password: dbPassword,
+	// database: 'tpmobile',
 	// port: 3306
+	host: 'localhost',
+	user: 'root',
+	password: 'root',
+	database: 'user1026_tp',
+	port: 3307
 })
-async function infoCheckDb(table, nameOrMail, value) {
+async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
-			`SELECT * FROM ${table} WHERE ${nameOrMail}='${value}'`,
+			`SELECT * FROM ${table} WHERE ${nameField}='${value}'`,
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)
 	return res.length > 0
 }
-
+async function checkField(table, nameField, nameFieldCondition, value) {
+	let res = await new Promise((res, rej) =>
+		connection.query(
+			`SELECT ${nameField} FROM ${table} WHERE ${nameFieldCondition}='${value}'`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+	return res[0]
+}
 async function returnCode(table, mailOrId, value) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
@@ -46,8 +54,17 @@ async function checkSessReductionCode(mail, code) {
 }
 
 //INSERTS
+async function threeValues(table, [value1, value2, value3]) {
+	await new Promise((res, rej) =>
+		connection.query(
+			`INSERT INTO ${table}(idAlbum, idLogo, idImages) VALUES (?, ?, ?)`,
+			[value1, value2, value3],
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
 async function createSessionTable(table, [mail, code]) {
-	let res = await new Promise((res, rej) =>
+	await new Promise((res, rej) =>
 		connection.query(
 			`INSERT INTO ${table}(mail, code) VALUES (?, ?)`,
 			[mail, code],
@@ -86,6 +103,30 @@ async function updateField(table, codeOrPassword, value, mail) {
 		)
 	)
 }
+async function updateLogo(table, value, idAlbum) {
+	await new Promise((res, rej) =>
+		connection.query(
+			`UPDATE ${table} SET idLogo ='${value}' WHERE idAlbum='${idAlbum}'`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
+async function updateIdImages(table, idPhoto, idAlbum) {
+	await new Promise((res, rej) =>
+		connection.query(
+			`UPDATE ${table} SET idImages = CONCAT(idImages, ' ${idPhoto}') WHERE idAlbum = '${idAlbum}';`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
+async function updateDelete(table, idPhoto, field, idAlbum) {
+	await new Promise((res, rej) =>
+		connection.query(
+			`UPDATE ${table} SET ${field} = REPLACE(${field}, '${idPhoto}', '') WHERE idAlbum = '${idAlbum}'`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
 /////////////////
 
 async function checkDbUserAuth(row, nameOrMail, password) {
@@ -106,5 +147,10 @@ module.exports = {
 	createSessionTable,
 	checkSessReductionCode,
 	updateField,
-	checkDbUserAuth
+	checkDbUserAuth,
+	threeValues,
+	updateLogo,
+	checkField,
+	updateIdImages,
+	updateDelete
 }

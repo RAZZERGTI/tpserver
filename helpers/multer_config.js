@@ -6,12 +6,12 @@ const storage = multer.diskStorage({
 	},
 	filename: function (req, file, cb) {
 		cb(null, Date.now() + file.originalname)
-		console.log('File Original - ' + file.originalname)
 	}
 })
 
 const fileFilter = (req, file, cb) => {
 	// reject a file
+	console.log('File Original - ' + file.originalname)
 	if (
 		file.mimetype === 'image/jpeg' ||
 		file.mimetype === 'image/png' ||
