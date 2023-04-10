@@ -6,7 +6,7 @@ const formData = new FormData()
 formData.append('fromName', 'AlbumImage')
 
 // const files = ['./logo.jpg', './TaP.png']
-const files = ['./logo.jpg']
+const files = ['./photo.jpg']
 
 files.forEach(filePath => {
 	const file = fs.readFileSync(filePath)

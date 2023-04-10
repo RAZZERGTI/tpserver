@@ -181,7 +181,6 @@ app.delete('/delete/:action/:parent_id/:resource_id', async (req, res) => {
 	const { parent_id } = req.params
 	const { resource_id } = req.params
 	const { action } = req.params
-	console.log(parent_id + ' ' + resource_id)
 	await deletePhoto(await getToken(), resource_id, parent_id, action)
 	res.send({
 		response: true

@@ -17,7 +17,6 @@ const swapLogo = async req => {
 			'idAlbum',
 			idFolder
 		)
-		console.log(idPastImage.idLogo.length)
 		if (idPastImage.idLogo.length === 37) {
 			await deletePhoto(tok, idPastImage.idLogo, idFolder, 'logo')
 		}
