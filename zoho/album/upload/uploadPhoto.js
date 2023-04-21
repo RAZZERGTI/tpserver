@@ -54,6 +54,7 @@ const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 				domain: url
 			})
 			.then(async data => {
+				console.log(data)
 				deleteFile(path)
 				if (action === 'create') {
 					await threeValues('albums', [
@@ -76,6 +77,7 @@ const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 			})
 
 			.catch(async data => {
+				console.log(data)
 				if (
 					data.response.data.errors[0].title === 'Invalid OAuth token.' ||
 					data.response.data.errors[0].title ===
@@ -93,7 +95,9 @@ const uploadPhoto = async (parent_id, token, action, typePhoto) => {
 		try {
 			const zWDApi = new ZWorkDriveApi(token, url)
 			const filePath = await getPhotoFromDirectory()
+			console.log('filepath - ', filePath)
 			const extensionReg = filePath.match(/\.(jpg|jpeg|png)$/i)
+			console.log('extensionReg - ', extensionReg)
 			resolve(
 				await uploadFile(
 					zWDApi,
