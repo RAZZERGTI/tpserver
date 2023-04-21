@@ -17,10 +17,8 @@ async function createAlbum() {
 	return new Promise(async (resolve, reject) => {
 		let idFolderRandom = randomInteger(100000000, 999999999)
 		const tok = await tokenGet()
-		console.log('hello')
 		createFolder(idFolderRandom, tok)
 			.then(async idFolder => {
-				console.log('hello2x')
 				const idImage = await uploadPhoto(idFolder, tok, 'create', 'logo')
 				resolve({
 					response: {
