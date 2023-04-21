@@ -44,8 +44,6 @@ const deleteFile = path => {
 
 const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 	return new Promise(async (resolve, reject) => {
-		console.log('Path - ', path)
-		console.log('READSTREAM - ', fs.createReadStream(path))
 		zWDApi.files
 			.upload({
 				parentId: parent_id,
@@ -78,7 +76,6 @@ const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 			})
 
 			.catch(async data => {
-				console.log(data)
 				if (
 					data.response.data.errors[0].title === 'Invalid OAuth token.' ||
 					data.response.data.errors[0].title ===
