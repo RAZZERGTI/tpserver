@@ -94,7 +94,9 @@ const uploadPhoto = async (parent_id, token, action, typePhoto) => {
 		try {
 			const zWDApi = new ZWorkDriveApi(token, url)
 			const filePath = await getPhotoFromDirectory()
+			console.log('filePath - ', filePath)
 			const extensionReg = filePath.match(/\.(jpg|jpeg|png)$/i)
+			console.log('extensionReg - ', extensionReg)
 			resolve(
 				await uploadFile(
 					zWDApi,
