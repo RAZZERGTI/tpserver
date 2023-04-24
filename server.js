@@ -114,7 +114,7 @@ app.get('/api/repeatCode?', async function (req, res) {
 // 		}
 // 	}
 // })
-const example = require('./posts/Example-CreateAlbum')
+// const example = require('./posts/Example-CreateAlbum')
 app.post('/createAlbum', upload.array('imageUploads', 10), async (req, res) => {
 	try {
 		const senderName = req.body.fromName
