@@ -45,6 +45,12 @@ const deleteFile = path => {
 const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 	return new Promise(async (resolve, reject) => {
 		console.log('ReadStream - ', fs.createReadStream(path))
+		console.log('INFOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+		console.log(name)
+		console.log(path)
+		console.log(parent_id)
+		console.log(token)
+		console.log(action)
 		zWDApi.files
 			.upload({
 				parentId: parent_id,
