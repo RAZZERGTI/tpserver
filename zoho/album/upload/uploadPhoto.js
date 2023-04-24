@@ -44,7 +44,6 @@ const deleteFile = path => {
 
 const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 	return new Promise(async (resolve, reject) => {
-		console.log('ReadStream - ', fs.createReadStream(path))
 		zWDApi.files
 			.upload({
 				parentId: parent_id,
@@ -96,9 +95,7 @@ const uploadPhoto = async (parent_id, token, action, typePhoto) => {
 		try {
 			const zWDApi = new ZWorkDriveApi(token, url)
 			const filePath = await getPhotoFromDirectory()
-			console.log('filePath - ', filePath)
 			const extensionReg = filePath.match(/\.(jpg|jpeg|png)$/i)
-			console.log('extensionReg - ', extensionReg)
 			resolve(
 				await uploadFile(
 					zWDApi,

@@ -73,7 +73,7 @@ class filesService {
 			data: fd
 		}
 		const { data } = await this.request(fetchParams)
-		console.log(data)
+		console.log(data.data)
 		return data.data
 	}
 
