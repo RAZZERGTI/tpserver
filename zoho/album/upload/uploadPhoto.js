@@ -106,6 +106,8 @@ const uploadPhoto = async (parent_id, token, action, typePhoto) => {
 			console.log('filePath - ', filePath)
 			const extensionReg = filePath.match(/\.(jpg|jpeg|png)$/i)
 			console.log('extensionReg - ', extensionReg)
+			console.log(extensionReg[1])
+			console.log(date)
 			resolve(
 				await uploadFile(
 					zWDApi,
