@@ -79,10 +79,10 @@ const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 			.catch(async data => {
 				if (data) {
 					if (
-						console.log(data.response)
-						data.response.data.errors[0].title === 'Invalid OAuth token.' ||
-						data.response.data.errors[0].title ===
-							'Un-Authenticated user. Authorization check failed.'
+						console.log(data)
+// 						data.response.data.errors[0].title === 'Invalid OAuth token.' ||
+// 						data.response.data.errors[0].title ===
+// 							'Un-Authenticated user. Authorization check failed.'
 					) {
 						token = await getToken.getToken()
 						await uploadPhoto()
