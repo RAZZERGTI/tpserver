@@ -114,7 +114,7 @@ app.get('/api/repeatCode?', async function (req, res) {
 // 		}
 // 	}
 // })
-const example = require('./posts/Example-CreateAlbum')
+// const example = require('./posts/Example-CreateAlbum')
 app.post('/createAlbum', upload.array('imageUploads', 10), async (req, res) => {
 	try {
 		const senderName = req.body.fromName
@@ -129,7 +129,7 @@ app.post('/createAlbum', upload.array('imageUploads', 10), async (req, res) => {
 		} else if (req.files.length === 0) {
 			res.status(500).json({ error: `${senderName} - No images sent.` })
 		} else {
-			const create = await createAlbum.createAlbum()
+			const create = await createAlbum.createAlbum(req.body)
 			res.send(create)
 		}
 	} catch (e) {

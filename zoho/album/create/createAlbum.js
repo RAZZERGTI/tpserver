@@ -13,13 +13,21 @@ function randomInteger(min, max) {
 	return Math.round(rand)
 }
 
-async function createAlbum() {
+async function createAlbum(reqBody) {
 	return new Promise(async (resolve, reject) => {
+		console.log(reqBody.id)
+		console.log(reqBody.albumName)
 		let idFolderRandom = randomInteger(100000000, 999999999)
 		const tok = await tokenGet()
 		createFolder(idFolderRandom, tok)
 			.then(async idFolder => {
-				const idImage = await uploadPhoto(idFolder, tok, 'create', 'logo')
+				const idImage = await uploadPhoto(
+					idFolder,
+					tok,
+					'create',
+					'logo',
+					reqBody
+				)
 				resolve({
 					response: {
 						idAlbum: idFolder,

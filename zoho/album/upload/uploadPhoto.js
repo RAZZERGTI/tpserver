@@ -4,16 +4,13 @@ const ZWorkDriveApi = require('../../../zoho-workdrive-api')
 const {
 	threeValues,
 	updateLogo,
-	updateIdImages
+	updateIdImages,
+	sixValues
 } = require('../../../database/db')
 require('dotenv').config()
 
 const url = 'eu'
 
-<<<<<<< HEAD
-=======
-const now = new Date()
->>>>>>> 67b7e4acee9844c07f82ebbc4275a2cdbab39cf3
 let date = new Date()
 	.toLocaleString('en-US', {
 		hour12: false,
@@ -48,16 +45,16 @@ const deleteFile = path => {
 	})
 }
 
-const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
+const uploadFile = async (
+	zWDApi,
+	name,
+	path,
+	parent_id,
+	token,
+	action,
+	reqBody
+) => {
 	return new Promise(async (resolve, reject) => {
-<<<<<<< HEAD
-		console.log(name)
-		console.log(path)
-		console.log(parent_id)
-		console.log(token)
-		console.log(action)
-=======
->>>>>>> 67b7e4acee9844c07f82ebbc4275a2cdbab39cf3
 		zWDApi.files
 			.upload({
 				parentId: parent_id,
@@ -70,9 +67,12 @@ const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 			.then(async data => {
 				deleteFile(path)
 				if (action === 'create') {
-					await threeValues('albums', [
+					await sixValues('albums', [
 						`${parent_id}`,
+						reqBody.id,
+						reqBody.albumName,
 						`${data[0].attributes.resource_id}`,
+						' ',
 						' '
 					])
 					resolve(data[0].attributes.resource_id)
@@ -91,7 +91,6 @@ const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 
 			.catch(async data => {
 				if (data) {
-<<<<<<< HEAD
 					console.log(data)
 					// if (
 					// 	data.response.data.errors[0].title === 'Invalid OAuth token.' ||
@@ -101,22 +100,12 @@ const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 					token = await getToken.getToken()
 					await uploadPhoto()
 					// }
-=======
-					if (
-						data.response.data.errors[0].title === 'Invalid OAuth token.' ||
-						data.response.data.errors[0].title ===
-							'Un-Authenticated user. Authorization check failed.'
-					) {
-						token = await getToken.getToken()
-						await uploadPhoto()
-					}
->>>>>>> 67b7e4acee9844c07f82ebbc4275a2cdbab39cf3
 				}
 			})
 	})
 }
 
-const uploadPhoto = async (parent_id, token, action, typePhoto) => {
+const uploadPhoto = async (parent_id, token, action, typePhoto, reqBody) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			const zWDApi = new ZWorkDriveApi(token, url)
@@ -129,7 +118,8 @@ const uploadPhoto = async (parent_id, token, action, typePhoto) => {
 					filePath,
 					parent_id,
 					token,
-					action
+					action,
+					reqBody
 				)
 			)
 		} catch (e) {

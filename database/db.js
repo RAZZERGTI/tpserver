@@ -4,16 +4,16 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	// host: dbHost,
-	// user: dbUser,
-	// password: dbPassword,
-	// database: 'tpmobile',
-	// port: 3306
-	host: 'localhost',
-	user: 'root',
-	password: 'root',
-	database: 'user1026_tp',
-	port: 3307
+	host: dbHost,
+	user: dbUser,
+	password: dbPassword,
+	database: 'tpmobile',
+	port: 3306
+	// host: 'localhost',
+	// user: 'root',
+	// password: 'root',
+	// database: 'user1026_tp',
+	// port: 3307
 })
 async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
@@ -59,6 +59,18 @@ async function threeValues(table, [value1, value2, value3]) {
 		connection.query(
 			`INSERT INTO ${table}(idAlbum, idLogo, idImages) VALUES (?, ?, ?)`,
 			[value1, value2, value3],
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
+async function sixValues(
+	table,
+	[value1, value2, value3, value4, value5, value6]
+) {
+	await new Promise((res, rej) =>
+		connection.query(
+			`INSERT INTO ${table}(idAlbum, idCreator, title, idLogo, idImages, idUsers) VALUES (?, ?, ?, ?, ?, ?)`,
+			[value1, value2, value3, value4, value5, value6],
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)
@@ -152,5 +164,6 @@ module.exports = {
 	updateLogo,
 	checkField,
 	updateIdImages,
-	updateDelete
+	updateDelete,
+	sixValues
 }

@@ -70,13 +70,34 @@ class filesService {
 			method: 'post',
 			url: `https://workdrive.zoho.${domain}/api/v1/upload?filename=${name}&parent_id=${parentId}&override-name-exist=${overrideNameExist}`,
 			headers: { ...this.hWithAuth(token), ...fd.getHeaders() },
-			data: fd
+			data: fd,
+			maxContentLength: Infinity
 		}
 		const { data } = await this.request(fetchParams)
 		console.log(data.data)
 		return data.data
 	}
-
+	async uploadLargeFile(
+		parentId,
+		name,
+		overrideNameExist,
+		stream,
+		token,
+		domain
+	) {
+		const fd = new FormData()
+		fd.append('content', stream)
+		const fetchParams = {
+			method: 'post',
+			url: `https://upload.zoho.${domain}/workdrive-api/v1/stream/upload`,
+			headers: { ...this.hWithAuth(token), ...fd.getHeaders() },
+			data: fd,
+			maxContentLength: Infinity
+		}
+		const { data } = await this.request(fetchParams)
+		console.log(data.data)
+		return data.data
+	}
 	async downloadFile(fileId, token, domain) {
 		const fetchParams = {
 			method: 'get',
