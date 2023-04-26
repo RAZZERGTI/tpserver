@@ -6,7 +6,7 @@ const formData = new FormData()
 formData.append('fromName', 'AlbumImage')
 
 // const files = ['./logo.jpg', './TaP.png']
-const files = ['./TOV.png']
+const files = ['./phot.jpg']
 
 files.forEach(filePath => {
 	const file = fs.readFileSync(filePath)
@@ -15,7 +15,7 @@ files.forEach(filePath => {
 	})
 })
 
-fetch('http://localhost:3001/createAlbum', {
+fetch('http://188.212.124.120:3001/createAlbum', {
 	method: 'POST',
 	body: formData,
 	headers: {

@@ -10,9 +10,11 @@ require('dotenv').config()
 
 const url = 'eu'
 
-const now = new Date()
-let date = now
-	.toLocaleString()
+let date = new Date()
+	.toLocaleString('en-US', {
+		hour12: false,
+		timeZone: 'UTC'
+	})
 	.replace(/\./g, '-')
 	.replace(/,/g, '_')
 	.replace(/:/g, '-')
@@ -44,6 +46,11 @@ const deleteFile = path => {
 
 const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 	return new Promise(async (resolve, reject) => {
+		console.log(name)
+		console.log(path)
+		console.log(parent_id)
+		console.log(token)
+		console.log(action)
 		zWDApi.files
 			.upload({
 				parentId: parent_id,
@@ -77,14 +84,15 @@ const uploadFile = async (zWDApi, name, path, parent_id, token, action) => {
 
 			.catch(async data => {
 				if (data) {
-					if (
-						data.response.data.errors[0].title === 'Invalid OAuth token.' ||
-						data.response.data.errors[0].title ===
-							'Un-Authenticated user. Authorization check failed.'
-					) {
-						token = await getToken.getToken()
-						await uploadPhoto()
-					}
+					console.log(data)
+					// if (
+					// 	data.response.data.errors[0].title === 'Invalid OAuth token.' ||
+					// 	data.response.data.errors[0].title ===
+					// 		'Un-Authenticated user. Authorization check failed.'
+					// ) {
+					token = await getToken.getToken()
+					await uploadPhoto()
+					// }
 				}
 			})
 	})
