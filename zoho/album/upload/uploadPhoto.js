@@ -11,8 +11,11 @@ require('dotenv').config()
 const url = 'eu'
 
 const now = new Date()
-let date = now
-	.toLocaleString()
+let date = new Date()
+	.toLocaleString('en-US', {
+		hour12: false,
+		timeZone: 'UTC'
+	})
 	.replace(/\./g, '-')
 	.replace(/,/g, '_')
 	.replace(/:/g, '-')
