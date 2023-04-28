@@ -70,7 +70,8 @@ class filesService {
 			method: 'post',
 			url: `https://workdrive.zoho.${domain}/api/v1/upload?filename=${name}&parent_id=${parentId}&override-name-exist=${overrideNameExist}`,
 			headers: { ...this.hWithAuth(token), ...fd.getHeaders() },
-			data: fd
+			data: fd,
+			maxContentLength: Infinity
 		}
 		const { data } = await this.request(fetchParams)
 		console.log(data.data)
