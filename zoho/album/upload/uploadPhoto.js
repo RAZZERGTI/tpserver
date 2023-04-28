@@ -55,14 +55,6 @@ const uploadFile = async (
 	reqBody
 ) => {
 	return new Promise(async (resolve, reject) => {
-<<<<<<< HEAD
-=======
-		console.log(name)
-		console.log(path)
-		console.log(parent_id)
-		console.log(token)
-		console.log(action)
->>>>>>> 17f8393b3756f6761d85fa5cbd9ad7b33ac64b75
 		zWDApi.files
 			.upload({
 				parentId: parent_id,
