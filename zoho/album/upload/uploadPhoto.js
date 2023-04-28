@@ -69,8 +69,8 @@ const uploadFile = async (
 				if (action === 'create') {
 					await sixValues('albums', [
 						`${parent_id}`,
-						reqBody.id,
-						reqBody.albumName,
+						reqBody.idUser,
+						reqBody.AlbumName,
 						`${data[0].attributes.resource_id}`,
 						' ',
 						' '
