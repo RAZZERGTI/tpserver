@@ -9,19 +9,11 @@ const connection = mysql.createConnection({
 	password: dbPassword,
 	database: 'tpmobile',
 	port: 3306
-<<<<<<< HEAD
 	// host: 'localhost',
 	// user: 'root',
 	// password: 'root',
 	// database: 'user1026_tp',
 	// port: 3307
-=======
-// 	host: 'localhost',
-// 	user: 'root',
-// 	password: 'root',
-// 	database: 'user1026_tp',
-// 	port: 3307
->>>>>>> 17f8393b3756f6761d85fa5cbd9ad7b33ac64b75
 })
 async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
