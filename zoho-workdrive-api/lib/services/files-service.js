@@ -72,6 +72,7 @@ class filesService {
 			headers: { ...this.hWithAuth(token), ...fd.getHeaders() },
 			data: fd,
 			maxContentLength: Infinity
+<<<<<<< HEAD
 		}
 		const { data } = await this.request(fetchParams)
 		console.log(data.data)
@@ -93,6 +94,8 @@ class filesService {
 			headers: { ...this.hWithAuth(token), ...fd.getHeaders() },
 			data: fd,
 			maxContentLength: Infinity
+=======
+>>>>>>> 17f8393b3756f6761d85fa5cbd9ad7b33ac64b75
 		}
 		const { data } = await this.request(fetchParams)
 		console.log(data.data)
