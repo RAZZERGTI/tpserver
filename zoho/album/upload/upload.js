@@ -10,13 +10,11 @@ const uploadImages = async req => {
 		const idFolder = req.idAlbum
 		const tok = await tokenGet()
 		const res = await uploadPhoto(idFolder, tok, 'upload', 'photo')
-		const filename = res.attributes.FileName
 		const permalink = res.attributes.Permalink
 		const idImage = res.attributes.resource_id
 		resolve({
 			response: {
 				idPhoto: idImage,
-				filename: filename,
 				permalink: permalink
 			}
 		})
