@@ -17,6 +17,8 @@ const albums = require('./albums/getAlbums')
 const { uploadImages } = require('./zoho/album/upload/upload')
 const { downloadPhoto } = require('./zoho/album/download/download')
 
+getToken()
+
 app.get('/api/registration?', async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
@@ -114,6 +116,20 @@ app.get('/api/repeatCode?', async function (req, res) {
 // 		}
 // 	}
 // })
+
+let token
+
+async function getTokenAndUpdate() {
+	try {
+		token = await getToken()
+	} catch (error) {
+		console.error(`Error updating token: ${error}`)
+	}
+	setTimeout(getTokenAndUpdate, 59 * 60 * 1000) // запускаем функцию через 59 минут
+}
+
+getTokenAndUpdate()
+
 // const example = require('./posts/Example-CreateAlbum')
 app.post('/createAlbum', upload.array('imageUploads', 10), async (req, res) => {
 	try {
@@ -130,7 +146,7 @@ app.post('/createAlbum', upload.array('imageUploads', 10), async (req, res) => {
 		} else if (req.files.length === 0) {
 			res.status(500).json({ error: `${senderName} - No images sent.` })
 		} else {
-			const create = await createAlbum.createAlbum(req.body)
+			const create = await createAlbum.createAlbum(req.body, token)
 			res.send(create)
 		}
 	} catch (e) {
@@ -153,7 +169,7 @@ app.post('/uploadPhoto', upload.array('imageUploads', 10), async (req, res) => {
 		} else if (req.files.length === 0) {
 			res.status(500).json({ error: `${senderName} - No images sent.` })
 		} else {
-			const uploadPhoto = await uploadImages(req.body)
+			const uploadPhoto = await uploadImages(req.body, token)
 			res.send(uploadPhoto)
 		}
 	} catch (e) {
@@ -173,7 +189,7 @@ app.post('/swapLogo', upload.array('imageUploads', 1), async (req, res) => {
 	} else if (req.files.length === 0) {
 		res.status(500).json({ error: `${senderName} - No images sent.` })
 	} else {
-		const swap = await swapLogo(req.body)
+		const swap = await swapLogo(req.body, token)
 		res.send(swap)
 	}
 })
@@ -182,12 +198,12 @@ app.delete('/delete/:action/:parent_id/:resource_id', async (req, res) => {
 	const { parent_id } = req.params
 	const { resource_id } = req.params
 	const { action } = req.params
-	await deletePhoto(await getToken(), resource_id, parent_id, action)
+	await deletePhoto(token, resource_id, parent_id, action)
 	res.send({
 		response: true
 	})
 })
 
-app.listen(port, () => {
+app.listen(port, async () => {
 	console.log(`\nServer started ${port}...\nPID - ${pid}`)
 })

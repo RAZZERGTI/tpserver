@@ -2,28 +2,21 @@ const { createFolder } = require('./folder/createFolder')
 const { uploadPhoto } = require('../upload/uploadPhoto')
 const { getToken } = require('../../getToken')
 
-const tokenGet = () => {
-	return new Promise(async (resolve, reject) => {
-		await getToken().then(r => resolve(r))
-	})
-}
-
 function randomInteger(min, max) {
 	let rand = min - 0.5 + Math.random() * (max - min + 1)
 	return Math.round(rand)
 }
 
-async function createAlbum(reqBody) {
+async function createAlbum(reqBody, token) {
 	return new Promise(async (resolve, reject) => {
 		console.log(reqBody)
 		console.log(reqBody)
 		let idFolderRandom = randomInteger(100000000, 999999999)
-		const tok = await tokenGet()
-		createFolder(idFolderRandom, tok)
+		createFolder(idFolderRandom, token)
 			.then(async idFolder => {
 				const idImage = await uploadPhoto(
 					idFolder,
-					tok,
+					token,
 					'create',
 					'logo',
 					reqBody

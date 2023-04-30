@@ -4,12 +4,12 @@ const fs = require('fs')
 
 const formData = new FormData()
 formData.append('fromName', 'uploadPhoto')
-formData.append('idAlbum', '60rn6985598f829124aa49c86b2dd5d26ec14')
+formData.append('idAlbum', '9j3gid71d23b357b7465a8afadc2cc7313b20')
 
 // const files = ['./logo.jpg', './TaP.png']
 // const files = ['./TaP.png']
 // const files = ['./logo.jpg']
-const files = ['./logo.jpg']
+const files = ['./siz.jpg']
 
 files.forEach(filePath => {
 	const file = fs.readFileSync(filePath)
