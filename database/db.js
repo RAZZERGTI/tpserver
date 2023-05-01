@@ -44,11 +44,12 @@ async function returnCode(table, mailOrId, value) {
 	return res[0]
 }
 
-async function getTitle(arr) {
+async function getTitle(arr, idUser) {
 	let inClause = arr.map(id => `'${id}'`).join(',')
 	let res = await new Promise((res, rej) =>
 		connection.query(
-			`select title, idLogo from albums where idAlbum in (${inClause});`,
+			// `select title, idLogo from albums where idAlbum in (${inClause});`,
+			`SELECT title  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`,
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)
@@ -58,16 +59,16 @@ async function getTitle(arr) {
 		idLogo: `https://workdrive.zoho.eu/api/v1/download/${item.idLogo}`
 	}))
 }
-async function getIdLogo(arr) {
-	let inClause = arr.map(id => `'${id}'`).join(',')
-	let res = await new Promise((res, rej) =>
-		connection.query(
-			`select title from albums where idLogo in (${inClause});`,
-			(err, results) => (err ? rej(err) : res(results))
-		)
-	)
-	return res.map(item => item.idLogo)
-}
+// async function getIdLogo(arr) {
+// 	let inClause = arr.map(id => `'${id}'`).join(',')
+// 	let res = await new Promise((res, rej) =>
+// 		connection.query(
+// 			`select title from albums where idLogo in (${inClause});`,
+// 			(err, results) => (err ? rej(err) : res(results))
+// 		)
+// 	)
+// 	return res.map(item => item.idLogo)
+// }
 ///////////////////////////////////////////////////////////
 async function checkSessReductionCode(mail, code) {
 	let res = await new Promise((res, rej) =>
@@ -191,6 +192,6 @@ module.exports = {
 	updateIdImages,
 	updateDelete,
 	sixValues,
-	getTitle,
-	getIdLogo
+	getTitle
+	// getIdLogo
 }

@@ -97,9 +97,10 @@ app.get('/api/repeatCode?', async function (req, res) {
 		}
 	}
 })
-app.get('/getAllAlbums', async function (req, res) {
+app.get('/getAllAlbums?', async function (req, res) {
 	try {
-		let getAll = await getAllFolders(token)
+		let url = `${req.originalUrl}`
+		let getAll = await getAllFolders(url, token)
 		res.send(getAll)
 	} catch (e) {
 		return {
