@@ -13,10 +13,9 @@ const authUser = require('./authorization/authUser')
 const confirmCodeReg = require('./registration/confirmCodeReg')
 const reduction = require('./reduction/reductionPassword')
 const repeatCode = require('./repeat/repeatCode')
-const albums = require('./albums/getAlbums')
 const { uploadImages } = require('./zoho/album/upload/upload')
 const { downloadPhoto } = require('./zoho/album/download/download')
-
+const { getAllFolders } = require('./zoho/album/getFolders/getFolders')
 getToken()
 
 app.get('/api/registration?', async function (req, res) {
@@ -98,7 +97,20 @@ app.get('/api/repeatCode?', async function (req, res) {
 		}
 	}
 })
-
+app.get('/getAllAlbums', async function (req, res) {
+	try {
+		let getAll = await getAllFolders(token)
+		res.send(getAll)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
 // app.get('/download/:resource_id', async function (req, res) {
 // 	try {
 // 		console.log(await getToken())
@@ -133,7 +145,6 @@ getTokenAndUpdate()
 // const example = require('./posts/Example-CreateAlbum')
 app.post('/createAlbum', upload.array('imageUploads', 10), async (req, res) => {
 	try {
-		console.log(req.body)
 		const senderName = req.body.fromName
 		if (senderName == null) {
 			res.status(500).json({ error: `No senderName sent.` })

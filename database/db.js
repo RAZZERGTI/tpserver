@@ -33,6 +33,7 @@ async function checkField(table, nameField, nameFieldCondition, value) {
 	)
 	return res[0]
 }
+
 async function returnCode(table, mailOrId, value) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
@@ -41,6 +42,31 @@ async function returnCode(table, mailOrId, value) {
 		)
 	)
 	return res[0]
+}
+
+async function getTitle(arr) {
+	let inClause = arr.map(id => `'${id}'`).join(',')
+	let res = await new Promise((res, rej) =>
+		connection.query(
+			`select title, idLogo from albums where idAlbum in (${inClause});`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+	return res.map((item, index) => ({
+		id: arr[index],
+		title: item.title,
+		idLogo: `https://workdrive.zoho.eu/api/v1/download/${item.idLogo}`
+	}))
+}
+async function getIdLogo(arr) {
+	let inClause = arr.map(id => `'${id}'`).join(',')
+	let res = await new Promise((res, rej) =>
+		connection.query(
+			`select title from albums where idLogo in (${inClause});`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+	return res.map(item => item.idLogo)
 }
 ///////////////////////////////////////////////////////////
 async function checkSessReductionCode(mail, code) {
@@ -160,10 +186,11 @@ module.exports = {
 	checkSessReductionCode,
 	updateField,
 	checkDbUserAuth,
-	threeValues,
 	updateLogo,
 	checkField,
 	updateIdImages,
 	updateDelete,
-	sixValues
+	sixValues,
+	getTitle,
+	getIdLogo
 }

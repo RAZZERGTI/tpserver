@@ -9,8 +9,6 @@ function randomInteger(min, max) {
 
 async function createAlbum(reqBody, token) {
 	return new Promise(async (resolve, reject) => {
-		console.log(reqBody)
-		console.log(reqBody)
 		let idFolderRandom = randomInteger(100000000, 999999999)
 		createFolder(idFolderRandom, token)
 			.then(async idFolder => {

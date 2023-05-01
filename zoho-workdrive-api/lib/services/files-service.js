@@ -209,7 +209,16 @@ class filesService {
 
 		return data.data
 	}
+	async getAllFolders(fileId, token, domain) {
+		const fetchParams = {
+			method: 'get',
+			url: `https://www.zohoapis.${domain}/workdrive/api/v1/files/${fileId}/files?page%5Blimit%5D=50&page%5Boffset%5D=0 `,
+			headers: this.hWithAuth(token)
+		}
+		const { data } = await this.request(fetchParams)
 
+		return data.data
+	}
 	async getOneFileInfo(fileId, token, domain) {
 		const fetchParams = {
 			method: 'get',

@@ -2,7 +2,6 @@ const fs = require('fs')
 const getToken = require('../../getToken')
 const ZWorkDriveApi = require('../../../zoho-workdrive-api')
 const {
-	threeValues,
 	updateLogo,
 	updateIdImages,
 	sixValues

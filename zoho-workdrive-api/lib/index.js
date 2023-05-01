@@ -182,6 +182,17 @@ class WorkdriveController {
 	}
 
 	folder = {
+		getAll: async ({
+			folderId,
+			accessToken = this.accessToken,
+			domain = this.domain
+		}) => {
+			return this.wdService.filesService.getAllFolders(
+				folderId,
+				accessToken,
+				domain
+			)
+		},
 		info: async ({
 			folderId,
 			accessToken = this.accessToken,
