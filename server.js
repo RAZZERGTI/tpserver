@@ -168,6 +168,7 @@ app.post('/createAlbum', upload.array('imageUploads', 10), async (req, res) => {
 // const example = require('./posts/Example-Upload')
 app.post('/uploadPhoto', upload.array('imageUploads', 10), async (req, res) => {
 	try {
+		console.log(req.body)
 		const senderName = req.body.fromName
 		if (senderName == null) {
 			res.status(500).json({ error: `No senderName sent.` })
