@@ -49,7 +49,7 @@ async function getTitle(arr, idUser) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
 			// `select title, idLogo from albums where idAlbum in (${inClause});`,
-			`SELECT title  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`,
+			`SELECT title, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`,
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)
