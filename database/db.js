@@ -56,7 +56,7 @@ async function getTitle(arr, idUser) {
 	return res.map((item, index) => ({
 		id: arr[index],
 		title: item.title,
-		idLogo: `${item.idLogo}`
+		idLogo: item.idLogo
 	}))
 }
 // async function getIdLogo(arr) {
