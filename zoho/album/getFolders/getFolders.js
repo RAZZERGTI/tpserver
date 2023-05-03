@@ -19,9 +19,14 @@ const getAllFolders = async (req, token) => {
 				domain: url
 			})
 			.then(async data => {
-				const ids = data.map(item => item.id)
-				let obj = await getTitle(ids, idUser)
-				resolve(obj)
+				if (data.length > 0) {
+					const ids = data.map(item => item.id)
+					let obj = await getTitle(ids, idUser)
+					console.log(obj)
+					resolve(obj)
+				} else {
+					resolve({})
+				}
 			})
 			.catch(async data => {
 				console.log(data)

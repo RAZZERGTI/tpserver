@@ -91,14 +91,8 @@ const uploadFile = async (
 			.catch(async data => {
 				if (data) {
 					console.log(data)
-					// if (
-					// 	data.response.data.errors[0].title === 'Invalid OAuth token.' ||
-					// 	data.response.data.errors[0].title ===
-					// 		'Un-Authenticated user. Authorization check failed.'
-					// ) {
 					token = await getToken.getToken()
 					await uploadPhoto()
-					// }
 				}
 			})
 	})

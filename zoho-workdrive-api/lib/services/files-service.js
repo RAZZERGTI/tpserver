@@ -106,7 +106,6 @@ class filesService {
 			headers: this.hWithAuth(token)
 		}
 		const { data } = await this.request(fetchParams)
-		// console.log(res)
 		return data
 	}
 

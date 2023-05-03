@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3001
+const port = 3101
 const pid = process.pid
 
 const createAlbum = require('./zoho/album/create/createAlbum')
@@ -97,7 +97,7 @@ app.get('/api/repeatCode?', async function (req, res) {
 		}
 	}
 })
-app.get('/getAllAlbums?', async function (req, res) {
+app.get('/api/getAllAlbums?', async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
 		let getAll = await getAllFolders(url, token)
@@ -112,23 +112,6 @@ app.get('/getAllAlbums?', async function (req, res) {
 		}
 	}
 })
-// app.get('/download/:resource_id', async function (req, res) {
-// 	try {
-// 		console.log(await getToken())
-// 		const { resource_id } = req.params
-// 		// console.log(resource_id)
-// 		const download = downloadPhoto(await getToken(), resource_id)
-// 		res.send(download)
-// 	} catch (e) {
-// 		return {
-// 			error: {
-// 				statusCode: 500,
-// 				name: 'Internal Server Error',
-// 				message: `${e}`
-// 			}
-// 		}
-// 	}
-// })
 
 let token
 
@@ -143,55 +126,79 @@ async function getTokenAndUpdate() {
 
 getTokenAndUpdate()
 
-// const example = require('./posts/Example-CreateAlbum')
-app.post('/createAlbum', upload.array('imageUploads', 10), async (req, res) => {
+app.get('/api/download/:resource_id', async function (req, res) {
 	try {
-		const senderName = req.body.fromName
-		if (senderName == null) {
-			res.status(500).json({ error: `No senderName sent.` })
-			return
-		}
-		if (req.files == null) {
-			res
-				.status(500)
-				.json({ error: `${senderName} - Image uploads not found.` })
-		} else if (req.files.length === 0) {
-			res.status(500).json({ error: `${senderName} - No images sent.` })
-		} else {
-			const create = await createAlbum.createAlbum(req.body, token)
-			res.send(create)
-		}
+		const { resource_id } = req.params
+		const download = await downloadPhoto(token, resource_id)
+		res.setHeader('Content-Type', `image/${download.extension}`)
+		res.send(download.data)
 	} catch (e) {
-		res.send(e)
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
 	}
 })
+// const example = require('./posts/Example-CreateAlbum')
+app.post(
+	'/api/createAlbum',
+	upload.array('imageUploads', 10),
+	async (req, res) => {
+		try {
+			const senderName = req.body.fromName
+			if (senderName == null) {
+				res.status(500).json({ error: `No senderName sent.` })
+				return
+			}
+			if (req.files == null) {
+				res
+					.status(500)
+					.json({ error: `${senderName} - Image uploads not found.` })
+			} else if (req.files.length === 0) {
+				res.status(500).json({ error: `${senderName} - No images sent.` })
+			} else {
+				const create = await createAlbum.createAlbum(req.body, token)
+				res.send(create)
+			}
+		} catch (e) {
+			res.send(e)
+		}
+	}
+)
 
 // const example = require('./posts/Example-Upload')
-app.post('/uploadPhoto', upload.array('imageUploads', 10), async (req, res) => {
-	try {
-		console.log(req.body)
-		const senderName = req.body.fromName
-		if (senderName == null) {
-			res.status(500).json({ error: `No senderName sent.` })
-			return
+app.post(
+	'/api/uploadPhoto',
+	upload.array('imageUploads', 10),
+	async (req, res) => {
+		try {
+			console.log(req.body)
+			const senderName = req.body.fromName
+			if (senderName == null) {
+				res.status(500).json({ error: `No senderName sent.` })
+				return
+			}
+			if (req.files == null) {
+				res
+					.status(500)
+					.json({ error: `${senderName} - Image uploads not found.` })
+			} else if (req.files.length === 0) {
+				res.status(500).json({ error: `${senderName} - No images sent.` })
+			} else {
+				const uploadPhoto = await uploadImages(req.body, token)
+				res.send(uploadPhoto)
+			}
+		} catch (e) {
+			res.send(e)
 		}
-		if (req.files == null) {
-			res
-				.status(500)
-				.json({ error: `${senderName} - Image uploads not found.` })
-		} else if (req.files.length === 0) {
-			res.status(500).json({ error: `${senderName} - No images sent.` })
-		} else {
-			const uploadPhoto = await uploadImages(req.body, token)
-			res.send(uploadPhoto)
-		}
-	} catch (e) {
-		res.send(e)
 	}
-})
+)
 
 // const exampleLogo = require('./posts/Example-SwapLogo')
-app.post('/swapLogo', upload.array('imageUploads', 1), async (req, res) => {
+app.post('/api/swapLogo', upload.array('imageUploads', 1), async (req, res) => {
 	const senderName = req.body.fromName
 	if (senderName == null) {
 		res.status(500).json({ error: `No senderName sent.` })
@@ -207,7 +214,7 @@ app.post('/swapLogo', upload.array('imageUploads', 1), async (req, res) => {
 	}
 })
 
-app.delete('/delete/:action/:parent_id/:resource_id', async (req, res) => {
+app.delete('/api/delete/:action/:parent_id/:resource_id', async (req, res) => {
 	const { parent_id } = req.params
 	const { resource_id } = req.params
 	const { action } = req.params
