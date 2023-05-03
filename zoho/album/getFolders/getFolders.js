@@ -8,7 +8,7 @@ const url = 'eu'
 
 const getAllFolders = async (req, token) => {
 	return new Promise(async (resolve, reject) => {
-		let reg = /\/\w+\?\w+=?(\w+)/i
+		let reg = /\/\w+\/\w+\?\w+=?(\w+)/i
 		let str = req.match(reg)
 		let idUser = str[1]
 		const zWDApi = new ZWorkDriveApi(token, url)
