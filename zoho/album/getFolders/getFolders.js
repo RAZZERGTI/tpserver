@@ -22,7 +22,6 @@ const getAllFolders = async (req, token) => {
 				if (data.length > 0) {
 					const ids = data.map(item => item.id)
 					let obj = await getTitle(ids, idUser)
-					console.log(obj)
 					resolve(obj)
 				} else {
 					resolve({})
