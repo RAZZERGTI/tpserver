@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3101
+const port = 3001
 const pid = process.pid
 
 const createAlbum = require('./zoho/album/create/createAlbum')
@@ -97,6 +97,20 @@ app.get('/api/repeatCode?', async function (req, res) {
 		}
 	}
 })
+
+let token
+
+async function getTokenAndUpdate() {
+	try {
+		token = await getToken()
+	} catch (error) {
+		console.error(`Error updating token: ${error}`)
+	}
+	setTimeout(getTokenAndUpdate, 59 * 60 * 1000) // запускаем функцию через 59 минут
+}
+
+getTokenAndUpdate()
+
 app.get('/api/getAllAlbums?', async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
@@ -112,19 +126,6 @@ app.get('/api/getAllAlbums?', async function (req, res) {
 		}
 	}
 })
-
-let token
-
-async function getTokenAndUpdate() {
-	try {
-		token = await getToken()
-	} catch (error) {
-		console.error(`Error updating token: ${error}`)
-	}
-	setTimeout(getTokenAndUpdate, 59 * 60 * 1000) // запускаем функцию через 59 минут
-}
-
-getTokenAndUpdate()
 
 app.get('/api/download/:resource_id', async function (req, res) {
 	try {

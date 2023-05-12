@@ -1,20 +1,21 @@
 const fs = require('fs')
-const getToken = require('../../getToken')
 const ZWorkDriveApi = require('../../../zoho-workdrive-api')
 const { getTitle } = require('../../../database/db')
 require('dotenv').config()
+const parent_id = process.env.PARENT_ID_TAP
 
 const url = 'eu'
 
 const getAllFolders = async (req, token) => {
 	return new Promise(async (resolve, reject) => {
-		let reg = /\/\w+\?\w+=?(\w+)/i
+		let reg = /\/\w+\/\w+\?\w+=?(\w+)/i
 		let str = req.match(reg)
 		let idUser = str[1]
+		console.log(idUser)
 		const zWDApi = new ZWorkDriveApi(token, url)
 		zWDApi.folder
 			.getAll({
-				folderId: '60rn6f59db3cf57de4f57a55bb79dee48cb04',
+				folderId: parent_id,
 				accessToken: token,
 				domain: url
 			})
@@ -22,7 +23,6 @@ const getAllFolders = async (req, token) => {
 				if (data.length > 0) {
 					const ids = data.map(item => item.id)
 					let obj = await getTitle(ids, idUser)
-					console.log(obj)
 					resolve(obj)
 				} else {
 					resolve({})
