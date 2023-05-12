@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3001
+const port = 3101
 const pid = process.pid
 
 const createAlbum = require('./zoho/album/create/createAlbum')
@@ -16,6 +16,7 @@ const repeatCode = require('./repeat/repeatCode')
 const { uploadImages } = require('./zoho/album/upload/upload')
 const { downloadPhoto } = require('./zoho/album/download/download')
 const { getAllFolders } = require('./zoho/album/getFolders/getFolders')
+const { getPhotosByAlbum } = require('./zoho/album/getPhotos/getPhotosByAlbum')
 getToken()
 
 app.get('/api/registration?', async function (req, res) {
@@ -143,6 +144,23 @@ app.get('/api/download/:resource_id', async function (req, res) {
 		}
 	}
 })
+
+app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
+	try {
+		const { resource_id } = req.params
+		console.log(resource_id)
+		const getPhotos = await getPhotosByAlbum(token, resource_id)
+		res.send(getPhotos)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
 // const example = require('./posts/Example-CreateAlbum')
 app.post(
 	'/api/createAlbum',
@@ -170,7 +188,7 @@ app.post(
 	}
 )
 
-// const example = require('./posts/Example-Upload')
+const example = require('./posts/Example-Upload')
 app.post(
 	'/api/uploadPhoto',
 	upload.array('imageUploads', 10),

@@ -9,11 +9,11 @@ const connection = mysql.createConnection({
 	password: dbPassword,
 	database: 'tpmobile',
 	port: 3306
-// 	host: 'localhost',
-// 	user: 'root',
-// 	password: 'root',
-// 	database: 'user1026_tp',
-// 	port: 3307
+	// host: 'localhost',
+	// user: 'root',
+	// password: 'root',
+	// database: 'user1026_tp',
+	// port: 3307
 })
 async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
@@ -58,6 +58,16 @@ async function getTitle(arr, idUser) {
 		title: item.title,
 		idLogo: item.idLogo
 	}))
+}
+
+async function getPhotosByAlbumId(idAlbum) {
+	let res = await new Promise((res, rej) =>
+		connection.query(
+			`SELECT idImages  FROM albums WHERE idAlbum='${idAlbum}'`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+	return res[0]
 }
 // async function getIdLogo(arr) {
 // 	let inClause = arr.map(id => `'${id}'`).join(',')
@@ -192,6 +202,7 @@ module.exports = {
 	updateIdImages,
 	updateDelete,
 	sixValues,
-	getTitle
+	getTitle,
+	getPhotosByAlbumId
 	// getIdLogo
 }

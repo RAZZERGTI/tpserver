@@ -1,15 +1,17 @@
 const fetch = require('node-fetch')
 const FormData = require('form-data')
 const fs = require('fs')
+require('dotenv').config()
+const parent_id = process.env.PARENT_ID_TAP
 
 const formData = new FormData()
 formData.append('fromName', 'uploadPhoto')
-formData.append('idAlbum', '9j3gid71d23b357b7465a8afadc2cc7313b20')
+formData.append('idAlbum', 'bappr1ddae8815bd54a218eade7c817dd5df0')
 
 // const files = ['./logo.jpg', './TaP.png']
 // const files = ['./TaP.png']
 // const files = ['./logo.jpg']
-const files = ['./siz.jpg']
+const files = ['./Sigma.jpg']
 
 files.forEach(filePath => {
 	const file = fs.readFileSync(filePath)
@@ -18,7 +20,7 @@ files.forEach(filePath => {
 	})
 })
 
-fetch('http://188.212.124.120:3001/uploadPhoto', {
+fetch('http://188.212.124.120:3001/api/uploadPhoto', {
 	method: 'POST',
 	body: formData,
 	headers: {

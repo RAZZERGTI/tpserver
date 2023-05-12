@@ -58,7 +58,7 @@ const uploadFile = async (
 			.upload({
 				parentId: parent_id,
 				name: name,
-				overrideNameExist: 'false',
+				overrideNameExist: 'true',
 				readableStream: fs.createReadStream(path),
 				accessToken: token,
 				domain: url
