@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3101
+const port = 3001
 const pid = process.pid
 
 const createAlbum = require('./zoho/album/create/createAlbum')
@@ -150,7 +150,13 @@ app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 		const { resource_id } = req.params
 		console.log(resource_id)
 		const getPhotos = await getPhotosByAlbum(token, resource_id)
-		res.send(getPhotos)
+		const array = getPhotos.idImages
+			.split(' ')
+			.filter(element => element !== '')
+		console.log(array)
+		res.send({
+			idImages: array
+		})
 	} catch (e) {
 		return {
 			error: {
@@ -188,7 +194,7 @@ app.post(
 	}
 )
 
-const example = require('./posts/Example-Upload')
+// const example = require('./posts/Example-Upload')
 app.post(
 	'/api/uploadPhoto',
 	upload.array('imageUploads', 10),
