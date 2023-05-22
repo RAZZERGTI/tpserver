@@ -90,7 +90,6 @@ const uploadFile = async (
 
 			.catch(async data => {
 				if (data) {
-					console.log(data)
 					token = await getToken.getToken()
 					await uploadPhoto()
 				}

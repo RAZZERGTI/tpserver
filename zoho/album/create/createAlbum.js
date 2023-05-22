@@ -10,7 +10,6 @@ function randomInteger(min, max) {
 async function createAlbum(reqBody, token) {
 	return new Promise(async (resolve, reject) => {
 		let idFolderRandom = randomInteger(100000000, 999999999)
-		console.log(reqBody)
 		createFolder(idFolderRandom, token)
 			.then(async idFolder => {
 				const idImage = await uploadPhoto(

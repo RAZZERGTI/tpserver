@@ -14,7 +14,6 @@ async function confirmCodeReg(href) {
 	} else {
 		let mail = result[1]
 		let code = result[2]
-		console.log(mail)
 		let sessCode = await db.returnCode('registration', 'mail', mail)
 		if (sessCode == null) {
 			return {

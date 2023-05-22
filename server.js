@@ -53,8 +53,6 @@ app.put('/editTitle/:album_id', async (req, res) => {
 		const requestBody = req.body.body
 		const parsedBody = JSON.parse(requestBody)
 		const newTitle = parsedBody.title
-		console.log(albumId)
-		console.log(newTitle)
 		await setTitleById(newTitle, albumId)
 		res.status(200).json({ message: 'Название альбома успешно изменено.' })
 	} catch (e) {
@@ -197,12 +195,10 @@ app.get('/api/download/:resource_id', async function (req, res) {
 app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 	try {
 		const { resource_id } = req.params
-		console.log(resource_id)
 		const getPhotos = await getPhotosByAlbum(token, resource_id)
 		const array = getPhotos.idImages
 			.split(' ')
 			.filter(element => element !== '')
-		console.log(array)
 		res.send({
 			idImages: array
 		})
@@ -249,7 +245,6 @@ app.post(
 	upload.array('imageUploads', 10),
 	async (req, res) => {
 		try {
-			console.log(req.body)
 			const senderName = req.body.fromName
 			if (senderName == null) {
 				res.status(500).json({ error: `No senderName sent.` })
