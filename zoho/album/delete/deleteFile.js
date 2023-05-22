@@ -29,7 +29,7 @@ const deleteFile = async (zWDApi, resource_id, token) => {
 			})
 	})
 }
-const deletePhoto = async (token, id, parent_id, action) => {
+const /deletePhoto = async (token, id, parent_id, action) => {
 	try {
 		if (id) {
 			const zWDApi = new ZWorkDriveApi(token, url)
