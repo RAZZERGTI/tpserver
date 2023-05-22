@@ -4,16 +4,16 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	// host: dbHost,
-	// user: dbUser,
-	// password: dbPassword,
-	// database: 'tpmobile',
-	// port: 3306
-	host: 'localhost',
-	user: 'root',
-	password: 'root',
-	database: 'user1026_tp',
-	port: 3307
+	host: dbHost,
+	user: dbUser,
+	password: dbPassword,
+	database: 'tpmobile',
+	port: 3306
+	// host: 'localhost',
+	// user: 'root',
+	// password: 'root',
+	// database: 'user1026_tp',
+	// port: 3307
 })
 async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
@@ -33,7 +33,6 @@ async function checkField(table, nameField, nameFieldCondition, value) {
 	)
 	return res[0]
 }
-
 async function returnCode(table, mailOrId, value) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
@@ -49,12 +48,13 @@ async function getTitle(arr, idUser) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
 			// `select title, idLogo from albums where idAlbum in (${inClause});`,
-			`SELECT title, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`,
+			`SELECT idAlbum, title, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`,
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)
-	return res.map((item, index) => ({
-		id: arr[index],
+	console.log(res)
+	return res.map(item => ({
+		id: item.idAlbum,
 		title: item.title,
 		idLogo: item.idLogo
 	}))
@@ -137,7 +137,7 @@ async function createDbCode(arrCode) {
 ///////////////
 
 ///DELETES
-async function deleteDbCode(table, row, value) {
+async function deleteRow(table, row, value) {
 	const sql = `DELETE FROM ${table} WHERE ${row} = '${value}'`
 	connection.query(sql, function (err, results) {})
 }
@@ -148,6 +148,14 @@ async function updateField(table, codeOrPassword, value, mail) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
 			`UPDATE ${table} SET ${codeOrPassword} ='${value}' WHERE mail='${mail}'`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
+async function setTitleById(title, id) {
+	let res = await new Promise((res, rej) =>
+		connection.query(
+			`UPDATE albums SET title ='${title}' WHERE idAlbum='${id}'`,
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)
@@ -191,7 +199,7 @@ module.exports = {
 	infoCheckDb,
 	returnCode,
 	createDbCode,
-	deleteDbCode,
+	deleteRow,
 	recordingUser,
 	createSessionTable,
 	checkSessReductionCode,
@@ -203,6 +211,7 @@ module.exports = {
 	updateDelete,
 	sixValues,
 	getTitle,
-	getPhotosByAlbumId
+	getPhotosByAlbumId,
+	setTitleById
 	// getIdLogo
 }

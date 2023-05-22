@@ -1,5 +1,5 @@
 const ZWorkDriveApi = require('../../../zoho-workdrive-api')
-const { updateDelete } = require('../../../database/db')
+const { updateDelete, deleteRow } = require('../../../database/db')
 
 const url = 'eu'
 const moveToTrash = async (zWDApi, resource_id, token) => {
@@ -31,15 +31,26 @@ const deleteFile = async (zWDApi, resource_id, token) => {
 }
 const deletePhoto = async (token, id, parent_id, action) => {
 	try {
-		const zWDApi = new ZWorkDriveApi(token, url)
-		await moveToTrash(zWDApi, id, token)
-		await deleteFile(zWDApi, id, token)
-		if (action === 'photo') {
-			await updateDelete('albums', id, 'idImages', parent_id)
-		} else if (action === 'logo') {
-			await updateDelete('albums', id, 'idLogo', parent_id)
+		if (id) {
+			const zWDApi = new ZWorkDriveApi(token, url)
+			await moveToTrash(zWDApi, id, token)
+			await deleteFile(zWDApi, id, token)
+			if (action === 'photo') {
+				await updateDelete('albums', id, 'idImages', parent_id)
+			} else if (action === 'logo') {
+				await updateDelete('albums', id, 'idLogo', parent_id)
+			} else {
+				return false
+			}
 		} else {
-			return false
+			const zWDApi = new ZWorkDriveApi(token, url)
+			await moveToTrash(zWDApi, parent_id, token)
+			await deleteFile(zWDApi, parent_id, token)
+			if (action === 'album') {
+				await deleteRow('albums', 'idAlbum', parent_id)
+			} else {
+				return false
+			}
 		}
 	} catch (e) {
 		console.log(e)

@@ -3,6 +3,8 @@ const app = express()
 const port = 3001
 const pid = process.pid
 
+const fs = require('fs')
+const swaggerUi = require('swagger-ui-express')
 const createAlbum = require('./zoho/album/create/createAlbum')
 const upload = require('./helpers/multer_config').upload
 const { getToken } = require('./zoho/getToken')
@@ -17,7 +19,17 @@ const { uploadImages } = require('./zoho/album/upload/upload')
 const { downloadPhoto } = require('./zoho/album/download/download')
 const { getAllFolders } = require('./zoho/album/getFolders/getFolders')
 const { getPhotosByAlbum } = require('./zoho/album/getPhotos/getPhotosByAlbum')
+const cors = require('cors')
+const { getUserById } = require('./users/getUserById')
+const bodyParser = require('body-parser')
+const { setTitleById } = require('./database/db')
 getToken()
+
+const swaggerFile = JSON.parse(fs.readFileSync('./swagger/output.json'))
+
+app.use('/api/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+
+app.use(cors(), bodyParser.json())
 
 app.get('/api/registration?', async function (req, res) {
 	try {
@@ -35,6 +47,43 @@ app.get('/api/registration?', async function (req, res) {
 	}
 })
 
+app.put('/editTitle/:album_id', async (req, res) => {
+	try {
+		const albumId = req.params.album_id
+		const requestBody = req.body.body
+		const parsedBody = JSON.parse(requestBody)
+		const newTitle = parsedBody.title
+		console.log(albumId)
+		console.log(newTitle)
+		await setTitleById(newTitle, albumId)
+		res.status(200).json({ message: 'Название альбома успешно изменено.' })
+	} catch (e) {
+		console.log(e)
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+
+app.get('/api/getUserById/:userId', async function (req, res) {
+	try {
+		const { userId } = req.params
+		const getInfo = await getUserById(userId)
+		res.send(getInfo)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
 app.get('/api/authorization?', async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
@@ -224,29 +273,39 @@ app.post(
 
 // const exampleLogo = require('./posts/Example-SwapLogo')
 app.post('/api/swapLogo', upload.array('imageUploads', 1), async (req, res) => {
-	const senderName = req.body.fromName
-	if (senderName == null) {
-		res.status(500).json({ error: `No senderName sent.` })
-		return
-	}
-	if (req.files == null) {
-		res.status(500).json({ error: `${senderName} - Image uploads not found.` })
-	} else if (req.files.length === 0) {
-		res.status(500).json({ error: `${senderName} - No images sent.` })
-	} else {
-		const swap = await swapLogo(req.body, token)
-		res.send(swap)
+	try {
+		const senderName = req.body.fromName
+		if (senderName == null) {
+			res.status(500).json({ error: `No senderName sent.` })
+			return
+		}
+		if (req.files == null) {
+			res
+				.status(500)
+				.json({ error: `${senderName} - Image uploads not found.` })
+		} else if (req.files.length === 0) {
+			res.status(500).json({ error: `${senderName} - No images sent.` })
+		} else {
+			const swap = await swapLogo(req.body, token)
+			res.send(swap)
+		}
+	} catch (e) {
+		res.send(e)
 	}
 })
 
-app.delete('/api/delete/:action/:parent_id/:resource_id', async (req, res) => {
-	const { parent_id } = req.params
-	const { resource_id } = req.params
-	const { action } = req.params
-	await deletePhoto(token, resource_id, parent_id, action)
-	res.send({
-		response: true
-	})
+app.delete('/api/delete/:action/:parent_id/:resource_id?', async (req, res) => {
+	try {
+		const { parent_id } = req.params
+		const { resource_id } = req.params
+		const { action } = req.params
+		await deletePhoto(token, resource_id, parent_id, action)
+		res.send({
+			response: true
+		})
+	} catch (e) {
+		res.send(e)
+	}
 })
 
 app.listen(port, async () => {

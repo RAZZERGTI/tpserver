@@ -17,17 +17,18 @@ async function registrationUser(href) {
 		let password = result[6]
 		if (password != null) {
 			let sessionCheck = await db.infoCheckDb('registration', 'name', name)
+			let idUser = randomInteger(100000000, 999999999)
+			let code = randomInteger(10000, 99999)
 			if (sessionCheck) {
+				await db.updateField('registration', 'code', code, mail)
 				return {
-					error: {
-						statusCode: 401,
-						name: 'unAuthorized',
-						message: 'user and password already in session'
+					response: {
+						id: idUser,
+						name: name,
+						mail: mail
 					}
 				}
 			} else {
-				let idUser = randomInteger(100000000, 999999999)
-				let code = randomInteger(10000, 99999)
 				const arrCode = [idUser, `${name}`, `${mail}`, `${password}`, code]
 				const createDbCode = await db.createDbCode(arrCode)
 				const sessCode = await session.sessionCode(

@@ -1,0 +1,312 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "TaP API",
+    "description": "Официальное API приложения TaP",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/registration?": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/authorization?": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/checkCode?": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/reductionPassword?": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/repeatCode?": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/getAllAlbums?": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/download/{resource_id}": {
+      "get": {
+        "description": "",
+        "produces": [
+          "image/${download.extension}"
+        ],
+        "parameters": [
+          {
+            "name": "resource_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/getPhotoByAlbum/{resource_id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "resource_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/createAlbum": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/uploadPhoto": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/swapLogo": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/delete/{action}/{parent_id}/{resource_id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "action",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "parent_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "resource_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Registration": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "1"
+        },
+        "text": {
+          "type": "string",
+          "example": "test"
+        },
+        "done": {
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "Authorization": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "example": "test"
+        }
+      }
+    },
+    "Reduction": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "example": "test"
+        }
+      }
+    },
+    "CreateAlbum": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "example": "test"
+        }
+      }
+    },
+    "UploadPhoto": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "example": "test"
+        }
+      }
+    },
+    "SwapLogo": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "example": "test"
+        }
+      }
+    },
+    "DeletePhoto": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "example": "logo or photo"
+        },
+        "parent_id": {
+          "type": "string",
+          "example": "id album"
+        },
+        "resource_id": {
+          "type": "string",
+          "example": "id photo"
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 const db = require('../database/db')
 
 async function confirmCodeReg(href) {
-	let pattern = /\/\w+\/\w+\?([a-z]+)=(\d+)&([a-z]+)=(\d+)/i
+	let pattern = /\/\w+\/\w+\?[a-z]+=(\w+@?\w+\.?\w+)&[a-z]+=(\d+)/i
 	let result = href.match(pattern)
 	if (result == null) {
 		return {
@@ -12,9 +12,10 @@ async function confirmCodeReg(href) {
 			}
 		}
 	} else {
-		let id = result[2]
-		let code = result[4]
-		let sessCode = await db.returnCode('registration', 'id', id)
+		let mail = result[1]
+		let code = result[2]
+		console.log(mail)
+		let sessCode = await db.returnCode('registration', 'mail', mail)
 		if (sessCode == null) {
 			return {
 				error: {
@@ -25,9 +26,9 @@ async function confirmCodeReg(href) {
 			}
 		} else {
 			let array = [sessCode.id, sessCode.name, sessCode.mail, sessCode.password]
-			if (`${sessCode.code}` === code && `${sessCode.id}` === id) {
+			if (`${sessCode.code}` === code && `${sessCode.mail}` === mail) {
 				const record = await db.recordingUser(array)
-				const del = await db.deleteDbCode('registration', 'mail', sessCode.mail)
+				const del = await db.deleteRow('registration', 'mail', sessCode.mail)
 				return { response: true }
 			} else {
 				return { response: false }

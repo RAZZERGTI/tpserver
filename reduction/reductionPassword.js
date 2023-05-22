@@ -25,7 +25,7 @@ async function reductionPassword(href) {
 	} else if (hrefCodeOrPassword === 'password') {
 		const checkSessRedCode = await db.infoCheckDb('reduction', 'mail', mail)
 		if (checkSessRedCode) {
-			const delSessRedCode = await db.deleteDbCode('reduction', 'mail', mail)
+			const delSessRedCode = await db.deleteRow('reduction', 'mail', mail)
 			const update = await db.updateField('users', 'password', value, mail)
 			const checkDbUser = await db.returnCode('users', 'mail', mail)
 			return {

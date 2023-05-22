@@ -11,7 +11,6 @@ const getAllFolders = async (req, token) => {
 		let reg = /\/\w+\/\w+\?\w+=?(\w+)/i
 		let str = req.match(reg)
 		let idUser = str[1]
-		console.log(idUser)
 		const zWDApi = new ZWorkDriveApi(token, url)
 		zWDApi.folder
 			.getAll({
@@ -22,6 +21,7 @@ const getAllFolders = async (req, token) => {
 			.then(async data => {
 				if (data.length > 0) {
 					const ids = data.map(item => item.id)
+					console.log(ids)
 					let obj = await getTitle(ids, idUser)
 					resolve(obj)
 				} else {
