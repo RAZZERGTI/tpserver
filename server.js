@@ -194,7 +194,6 @@ app.get('/api/download/:resource_id', async function (req, res) {
 
 app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 	try {
-		console.log(token)
 		const { resource_id } = req.params
 		const getPhotos = await getPhotosByAlbum(token, resource_id)
 		const array = getPhotos.idImages
