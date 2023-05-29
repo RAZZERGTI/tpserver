@@ -245,13 +245,14 @@ app.post(
 	}
 )
 
-// const example = require('./posts/Example-Upload')
+const example = require('./posts/Example-Upload')
 app.post(
 	'/api/uploadPhoto',
 	upload.array('imageUploads', 10),
 	async (req, res) => {
 		try {
 			const senderName = req.body.fromName
+			const fileNames = req.files.map(file => file.originalname)
 			if (senderName == null) {
 				res.status(500).json({ error: `No senderName sent.` })
 				return
@@ -263,7 +264,7 @@ app.post(
 			} else if (req.files.length === 0) {
 				res.status(500).json({ error: `${senderName} - No images sent.` })
 			} else {
-				const uploadPhoto = await uploadImages(req.body, token)
+				const uploadPhoto = await uploadImages(req.body, token, fileNames[0])
 				res.send(uploadPhoto)
 			}
 		} catch (e) {

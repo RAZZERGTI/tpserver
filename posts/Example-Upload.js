@@ -6,7 +6,7 @@ const parent_id = process.env.PARENT_ID_TAP
 
 const formData = new FormData()
 formData.append('fromName', 'uploadPhoto')
-formData.append('idAlbum', '3u3yodd4018a23d00431f9b5dcbd4b36f705c')
+formData.append('idAlbum', 'bdalredd1675c134341b790dc3ec892d3070f')
 
 // const files = ['./logo.jpg', './TaP.png']
 // const files = ['./TaP.png']
@@ -20,7 +20,8 @@ files.forEach(filePath => {
 	})
 })
 
-fetch('http://188.212.124.120:3001/api/uploadPhoto', {
+// fetch('http://188.212.124.120:3001/api/uploadPhoto', {
+fetch('http://localhost:3001/api/uploadPhoto', {
 	method: 'POST',
 	body: formData,
 	headers: {
