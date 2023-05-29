@@ -245,7 +245,7 @@ app.post(
 	}
 )
 
-const example = require('./posts/Example-Upload')
+// const example = require('./posts/Example-Upload')
 app.post(
 	'/api/uploadPhoto',
 	upload.array('imageUploads', 10),
