@@ -210,7 +210,7 @@ class filesService {
 	async getAllFolders(fileId, token, domain) {
 		const fetchParams = {
 			method: 'get',
-			url: `https://www.zohoapis.${domain}/workdrive/api/v1/files/${fileId}/files?page%5Blimit%5D=50&page%5Boffset%5D=0 `,
+			url: `https://www.zohoapis.${domain}/workdrive/api/v1/files/${fileId}/files?page%5Blimit%5D=50&page%5Boffset%5D=0`,
 			headers: this.hWithAuth(token)
 		}
 		const { data } = await this.request(fetchParams)

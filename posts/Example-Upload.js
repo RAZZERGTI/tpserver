@@ -6,7 +6,7 @@ const parent_id = process.env.PARENT_ID_TAP
 
 const formData = new FormData()
 formData.append('fromName', 'uploadPhoto')
-formData.append('idAlbum', 'bappr1ddae8815bd54a218eade7c817dd5df0')
+formData.append('idAlbum', '3u3yodd4018a23d00431f9b5dcbd4b36f705c')
 
 // const files = ['./logo.jpg', './TaP.png']
 // const files = ['./TaP.png']
