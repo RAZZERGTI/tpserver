@@ -221,6 +221,7 @@ app.post(
 		try {
 			const senderName = req.body.fromName
 			const fileNames = req.files.map(file => file.originalname)
+			console.log(fileNames)
 			if (senderName == null) {
 				res.status(500).json({ error: `No senderName sent.` })
 				return
