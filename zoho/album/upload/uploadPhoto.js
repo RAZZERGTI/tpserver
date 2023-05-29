@@ -20,14 +20,18 @@ let date = new Date()
 	.replace(/:/g, '-')
 	.replace(/ /g, '')
 
-const getPhotoFromDirectory = () => {
+const getPhotoFromDirectory = fileName => {
 	return new Promise((resolve, reject) => {
 		fs.readdir('images', (err, files) => {
 			if (err) {
 				reject(err)
 			} else {
 				if (files[0] !== null) {
-					resolve(`images/${files[0]}`)
+					files.map(file => {
+						if (file === fileName) {
+							resolve(`images/${file}`)
+						}
+					})
 				}
 			}
 		})
@@ -97,23 +101,34 @@ const uploadFile = async (
 	})
 }
 
-const uploadPhoto = async (parent_id, token, action, typePhoto, reqBody) => {
+const uploadPhoto = async (
+	parent_id,
+	token,
+	action,
+	typePhoto,
+	reqBody,
+	fileName
+) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			const zWDApi = new ZWorkDriveApi(token, url)
-			const filePath = await getPhotoFromDirectory()
+			const filePath = await getPhotoFromDirectory(fileName)
 			const extensionReg = filePath.match(/\.(jpg|jpeg|png)$/i)
-			resolve(
-				await uploadFile(
-					zWDApi,
-					`${typePhoto}_${date}.${extensionReg[1]}`,
-					filePath,
-					parent_id,
-					token,
-					action,
-					reqBody
+			if (extensionReg) {
+				resolve(
+					await uploadFile(
+						zWDApi,
+						`${typePhoto}_${date}.${extensionReg[1]}`,
+						filePath,
+						parent_id,
+						token,
+						action,
+						reqBody
+					)
 				)
-			)
+			} else {
+				resolve(false)
+			}
 		} catch (e) {
 			console.log(e)
 		}

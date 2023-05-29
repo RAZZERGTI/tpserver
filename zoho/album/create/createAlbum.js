@@ -7,7 +7,7 @@ function randomInteger(min, max) {
 	return Math.round(rand)
 }
 
-async function createAlbum(reqBody, token) {
+async function createAlbum(reqBody, token, fileName) {
 	return new Promise(async (resolve, reject) => {
 		let idFolderRandom = randomInteger(100000000, 999999999)
 		createFolder(idFolderRandom, token)
@@ -17,7 +17,8 @@ async function createAlbum(reqBody, token) {
 					token,
 					'create',
 					'logo',
-					reqBody
+					reqBody,
+					fileName
 				)
 				resolve({
 					response: {

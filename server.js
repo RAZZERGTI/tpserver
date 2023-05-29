@@ -220,6 +220,7 @@ app.post(
 	async (req, res) => {
 		try {
 			const senderName = req.body.fromName
+			const fileNames = req.files.map(file => file.originalname)
 			if (senderName == null) {
 				res.status(500).json({ error: `No senderName sent.` })
 				return
@@ -231,7 +232,11 @@ app.post(
 			} else if (req.files.length === 0) {
 				res.status(500).json({ error: `${senderName} - No images sent.` })
 			} else {
-				const create = await createAlbum.createAlbum(req.body, token)
+				const create = await createAlbum.createAlbum(
+					req.body,
+					token,
+					fileNames[0]
+				)
 				res.send(create)
 			}
 		} catch (e) {
