@@ -20,8 +20,8 @@ files.forEach(filePath => {
 	})
 })
 
-// fetch('http://188.212.124.120:3001/api/uploadPhoto', {
-fetch('http://localhost:3001/api/uploadPhoto', {
+fetch('http://188.212.124.120:3001/api/uploadPhoto', {
+	// fetch('http://localhost:3001/api/uploadPhoto', {
 	method: 'POST',
 	body: formData,
 	headers: {

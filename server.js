@@ -23,6 +23,9 @@ const cors = require('cors')
 const { getUserById } = require('./users/getUserById')
 const bodyParser = require('body-parser')
 const { setTitleById } = require('./database/db')
+const {
+	getInfoAlbumById
+} = require('./zoho/album/getInfoAlbumById/getInfoAlbumById')
 getToken()
 
 const swaggerFile = JSON.parse(fs.readFileSync('./swagger/output.json'))
@@ -159,6 +162,22 @@ async function getTokenAndUpdate() {
 
 getTokenAndUpdate()
 
+app.get('/api/getInfoAlbumById/:album_id', async function (req, res) {
+	try {
+		const { album_id } = req.params
+		let getAll = await getInfoAlbumById(album_id)
+		res.send(getAll)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+
 app.get('/api/getAllAlbums?', async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
@@ -245,7 +264,7 @@ app.post(
 	}
 )
 
-const example = require('./posts/Example-Upload')
+// const example = require('./posts/Example-Upload')
 app.post(
 	'/api/uploadPhoto',
 	upload.array('imageUploads', 10),

@@ -3,7 +3,6 @@ const { uploadPhoto } = require('../upload/uploadPhoto')
 const uploadImages = async (req, token, fileName) => {
 	return new Promise(async (resolve, reject) => {
 		const idFolder = req.idAlbum
-		console.log(req)
 		const res = await uploadPhoto(
 			idFolder,
 			token,
