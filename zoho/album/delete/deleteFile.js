@@ -61,7 +61,7 @@ const deletePhoto = async (token, id, parent_id, action) => {
 			}
 		}
 	} catch (e) {
-		console.log(e)
+		return e
 	}
 }
 module.exports = {
