@@ -15,10 +15,7 @@ const uploadImages = async (req, token, fileName) => {
 		const permalink = res.attributes.Permalink
 		const idImage = res.attributes.resource_id
 		resolve({
-			response: {
-				idPhoto: idImage,
-				permalink: permalink
-			}
+			idPhoto: idImage
 		})
 	}).catch(error => {
 		console.error(error)
