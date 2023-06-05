@@ -9,34 +9,37 @@ formData.append('fromName', 'uploadPhoto')
 formData.append('idAlbum', 'bdalredd1675c134341b790dc3ec892d3070f')
 
 // const files = ['./logo.jpg', './TaP.png']
-// const files = ['./TaP.png']
+const files = ['./TOV.png']
 // const files = ['./logo.jpg']
-const files = ['./Sigma.jpg']
+// const files = ['./Sigma.jpg']
 
+console.log()
 files.forEach(filePath => {
+	console.log(filePath)
 	const file = fs.readFileSync(filePath)
+	console.log(file)
 	formData.append('imageUploads', file, {
 		filename: filePath
 	})
 })
 
-fetch('http://188.212.124.120:3001/api/uploadPhoto', {
-	// fetch('http://localhost:3001/api/uploadPhoto', {
-	method: 'POST',
-	body: formData,
-	headers: {
-		...formData.getHeaders()
-	}
-})
-	.then(res => {
-		if (!res.ok) {
-			throw new Error('Error during request')
-		}
-		return res.json()
-	})
-	.then(data => {
-		console.log(data)
-	})
-	.catch(err => {
-		console.error(err)
-	})
+// fetch('http://188.212.124.120:3001/api/uploadPhoto', {
+// 	// fetch('http://localhost:3001/api/uploadPhoto', {
+// 	method: 'POST',
+// 	body: formData,
+// 	headers: {
+// 		...formData.getHeaders()
+// 	}
+// })
+// 	.then(res => {
+// 		if (!res.ok) {
+// 			throw new Error('Error during request')
+// 		}
+// 		return res.json()
+// 	})
+// 	.then(data => {
+// 		console.log(data)
+// 	})
+// 	.catch(err => {
+// 		console.error(err)
+// 	})

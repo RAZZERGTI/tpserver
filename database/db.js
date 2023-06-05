@@ -4,16 +4,16 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	host: dbHost,
-	user: dbUser,
-	password: dbPassword,
-	database: 'tpmobile',
-	port: 3306
-	// host: 'localhost',
-	// user: 'root',
-	// password: 'root',
-	// database: 'user1026_tp',
-	// port: 3307
+	// host: dbHost,
+	// user: dbUser,
+	// password: dbPassword,
+	// database: 'tpmobile',
+	// port: 3306
+	host: 'localhost',
+	user: 'root',
+	password: 'root',
+	database: 'user1026_tp',
+	port: 3307
 })
 async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
@@ -45,13 +45,12 @@ async function returnCode(table, mailOrId, value) {
 
 async function getTitle(arr, idUser) {
 	let inClause = arr.map(id => `'${id}'`).join(',')
+	let sql = `SELECT idAlbum, title, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`
 	let res = await new Promise((res, rej) =>
-		connection.query(
-			// `select title, idLogo from albums where idAlbum in (${inClause});`,
-			`SELECT idAlbum, title, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`,
-			(err, results) => (err ? rej(err) : res(results))
-		)
+		connection.query(sql, (err, results) => (err ? rej(err) : res(results)))
 	)
+	console.log(sql)
+	console.log(res)
 	return res.map(item => ({
 		id: item.idAlbum,
 		title: item.title,
@@ -90,11 +89,11 @@ async function checkSessReductionCode(mail, code) {
 }
 
 //INSERTS
-async function threeValues(table, [value1, value2, value3]) {
+async function fourValues(table, [value1, value2, value3, value4]) {
 	await new Promise((res, rej) =>
 		connection.query(
-			`INSERT INTO ${table}(idAlbum, idLogo, idImages) VALUES (?, ?, ?)`,
-			[value1, value2, value3],
+			`INSERT INTO ${table}(idPhoto, idUser, idAlbum, caption) VALUES (?, ?, ?, ?)`,
+			[value1, value2, value3, value4],
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)
@@ -195,6 +194,7 @@ async function checkDbUserAuth(row, nameOrMail, password) {
 	return res[0]
 }
 module.exports = {
+	fourValues,
 	infoCheckDb,
 	returnCode,
 	createDbCode,

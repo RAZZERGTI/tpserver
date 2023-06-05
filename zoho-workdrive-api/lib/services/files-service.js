@@ -94,7 +94,6 @@ class filesService {
 			maxContentLength: Infinity
 		}
 		const { data } = await this.request(fetchParams)
-		console.log(data.data)
 		return data.data
 	}
 	async downloadFile(fileId, token, domain) {

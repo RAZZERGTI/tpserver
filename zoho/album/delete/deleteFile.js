@@ -3,31 +3,39 @@ const { updateDelete, deleteRow } = require('../../../database/db')
 
 const url = 'eu'
 const moveToTrash = async (zWDApi, resource_id, token) => {
-	return new Promise((resolve, reject) => {
-		zWDApi.files
-			.moveTrash({
-				idArr: [`${resource_id}`],
-				accessToken: token,
-				domain: url
-			})
-			.then(data => {
-				resolve(data)
-			})
-	})
+	try {
+		return new Promise((resolve, reject) => {
+			zWDApi.files
+				.moveTrash({
+					idArr: [`${resource_id}`],
+					accessToken: token,
+					domain: url
+				})
+				.then(data => {
+					resolve(data)
+				})
+		})
+	} catch (e) {
+		return e
+	}
 }
 
 const deleteFile = async (zWDApi, resource_id, token) => {
-	return new Promise((resolve, reject) => {
-		zWDApi.files
-			.delete({
-				idArr: [`${resource_id}`],
-				accessToken: token,
-				domain: url
-			})
-			.then(data => {
-				resolve(data)
-			})
-	})
+	try {
+		return new Promise((resolve, reject) => {
+			zWDApi.files
+				.delete({
+					idArr: [`${resource_id}`],
+					accessToken: token,
+					domain: url
+				})
+				.then(data => {
+					resolve(data)
+				})
+		})
+	} catch (e) {
+		return e
+	}
 }
 const deletePhoto = async (token, id, parent_id, action) => {
 	try {
@@ -53,7 +61,7 @@ const deletePhoto = async (token, id, parent_id, action) => {
 			}
 		}
 	} catch (e) {
-		console.log(e)
+		return e
 	}
 }
 module.exports = {

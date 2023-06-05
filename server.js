@@ -22,7 +22,7 @@ const { getPhotosByAlbum } = require('./zoho/album/getPhotos/getPhotosByAlbum')
 const cors = require('cors')
 const { getUserById } = require('./users/getUserById')
 const bodyParser = require('body-parser')
-const { setTitleById } = require('./database/db')
+const { setTitleById, fourValues } = require('./database/db')
 const {
 	getInfoAlbumById
 } = require('./zoho/album/getInfoAlbumById/getInfoAlbumById')
@@ -180,6 +180,7 @@ app.get('/api/getInfoAlbumById/:album_id', async function (req, res) {
 
 app.get('/api/getAllAlbums?', async function (req, res) {
 	try {
+		console.log(token)
 		let url = `${req.originalUrl}`
 		let getAll = await getAllFolders(url, token)
 		res.send(getAll)
@@ -196,8 +197,21 @@ app.get('/api/getAllAlbums?', async function (req, res) {
 
 app.get('/api/download/:resource_id', async function (req, res) {
 	try {
+		let date = new Date()
+			.toLocaleString('en-US', {
+				hour12: false,
+				timeZone: 'Europe/Minsk'
+			})
+			.replace(/\./g, '-')
+			.replace(/,/g, '_')
+			.replace(/:/g, '-')
+			.replace(/ /g, '')
 		const { resource_id } = req.params
 		const download = await downloadPhoto(token, resource_id)
+		res.setHeader(
+			'Content-Disposition',
+			`attachment; filename=photo_${date}.${download.extension}`
+		)
 		res.setHeader('Content-Type', `image/${download.extension}`)
 		res.send(download.data)
 	} catch (e) {
@@ -239,7 +253,6 @@ app.post(
 		try {
 			const senderName = req.body.fromName
 			const fileNames = req.files.map(file => file.originalname)
-			console.log(fileNames)
 			if (senderName == null) {
 				res.status(500).json({ error: `No senderName sent.` })
 				return
@@ -263,7 +276,19 @@ app.post(
 		}
 	}
 )
-
+app.post('/api/photoCaption', async (req, res) => {
+	try {
+		const { idPhoto, idUser, idAlbum, caption } = req.body
+		await fourValues('photos', [idPhoto, idUser, idAlbum, caption])
+		res.send({
+			response: true
+		})
+	} catch (error) {
+		// Обработка ошибок, если таковые возникли при выполнении операций
+		console.error('Ошибка при обработке запроса:', error)
+		res.status(500).json({ error: 'Внутренняя ошибка сервера.' })
+	}
+})
 // const example = require('./posts/Example-Upload')
 app.post(
 	'/api/uploadPhoto',
