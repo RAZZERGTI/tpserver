@@ -52,7 +52,7 @@ async function getTitle(arr, idUser) {
 	console.log(sql)
 	console.log(res)
 	res.map(item => {
-		if (item.idLogo) {
+		if (item.idLogo.length > 0) {
 			return {
 				id: item.idAlbum,
 				title: item.title,
