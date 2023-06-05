@@ -69,7 +69,7 @@ const uploadFile = async (
 				domain: url
 			})
 			.then(async data => {
-				deleteFile(path)
+				path !== 'default-image/default-image.png' && deleteFile(path)
 				if (action === 'create') {
 					await sixValues('albums', [
 						`${parent_id}`,
@@ -122,7 +122,10 @@ const uploadPhoto = async (
 	return new Promise(async (resolve, reject) => {
 		try {
 			const zWDApi = new ZWorkDriveApi(token, url)
-			const filePath = await getPhotoFromDirectory(fileName)
+			const filePath =
+				fileName !== 'default-image.png'
+					? await getPhotoFromDirectory(fileName)
+					: `default-image/default-image.png`
 			const extensionReg = filePath.match(/\.(jpg|jpeg|png)$/i)
 			if (extensionReg) {
 				resolve(

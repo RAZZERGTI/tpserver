@@ -262,7 +262,9 @@ app.post(
 					.status(500)
 					.json({ error: `${senderName} - Image uploads not found.` })
 			} else if (req.files.length === 0) {
-				res.status(500).json({ error: `${senderName} - No images sent.` })
+				const fileName = 'default-image.png'
+				const create = await createAlbum.createAlbum(req.body, token, fileName)
+				res.send(create)
 			} else {
 				const create = await createAlbum.createAlbum(
 					req.body,
