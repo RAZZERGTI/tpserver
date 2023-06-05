@@ -4,16 +4,16 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	// host: dbHost,
-	// user: dbUser,
-	// password: dbPassword,
-	// database: 'tpmobile',
-	// port: 3306
-	host: 'localhost',
-	user: 'root',
-	password: 'root',
-	database: 'user1026_tp',
-	port: 3307
+	host: dbHost,
+	user: dbUser,
+	password: dbPassword,
+	database: 'tpmobile',
+	port: 3306
+// 	host: 'localhost',
+// 	user: 'root',
+// 	password: 'root',
+// 	database: 'user1026_tp',
+// 	port: 3307
 })
 async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
@@ -45,7 +45,7 @@ async function returnCode(table, mailOrId, value) {
 
 async function getTitle(arr, idUser) {
 	let inClause = arr.map(id => `'${id}'`).join(',')
-	let sql = `SELECT idAlbum, title, frame, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`
+	let sql = `SELECT idAlbum, title, frame, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = ${idUser} OR idUsers = ${idUser});`
 	let res = await new Promise((res, rej) =>
 		connection.query(sql, (err, results) => (err ? rej(err) : res(results)))
 	)
