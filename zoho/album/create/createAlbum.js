@@ -19,9 +19,9 @@ async function createAlbum(reqBody, token, fileName) {
 						reqBody.idUser,
 						reqBody.AlbumName,
 						reqBody.frame,
-						' ',
-						' ',
-						' '
+						'',
+						'',
+						''
 					])
 					resolve({
 						response: {
