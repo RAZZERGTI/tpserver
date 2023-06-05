@@ -295,6 +295,7 @@ app.post(
 	upload.array('imageUploads', 10),
 	async (req, res) => {
 		try {
+			console.log(req.body)
 			const senderName = req.body.fromName
 			const fileNames = req.files.map(file => file.originalname)
 			if (senderName == null) {
