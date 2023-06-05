@@ -45,7 +45,11 @@ async function returnCode(table, mailOrId, value) {
 
 async function getTitle(arr, idUser) {
 	let inClause = arr.map(id => `'${id}'`).join(',')
-	let sql = `SELECT idAlbum, title, frame, idLogo  FROM albums WHERE idAlbum IN (${inClause}) AND (idCreator = ${idUser} OR idUsers = ${idUser});`
+	let sql = `SELECT idAlbum, title, frame, idLogo 
+           FROM albums 
+           WHERE idAlbum IN (${inClause}) 
+           AND (idCreator = ${idUser} OR idUsers = ${idUser})
+           AND (idLogo = '${idLogo}' OR idLogo = '');`;
 	let res = await new Promise((res, rej) =>
 		connection.query(sql, (err, results) => (err ? rej(err) : res(results)))
 	)
