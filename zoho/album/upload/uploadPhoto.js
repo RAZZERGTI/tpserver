@@ -4,7 +4,8 @@ const ZWorkDriveApi = require('../../../zoho-workdrive-api')
 const {
 	updateLogo,
 	updateIdImages,
-	sixValues
+	sixValues,
+	fourValues
 } = require('../../../database/db')
 require('dotenv').config()
 
@@ -83,6 +84,14 @@ const uploadFile = async (
 					await updateLogo('albums', data[0].attributes.resource_id, parent_id)
 					resolve(data[0].attributes.resource_id)
 				} else if (action === 'upload') {
+					const idUser = reqBody.idUser
+					const caption = reqBody.caption
+					await fourValues('photos', [
+						data[0].attributes.resource_id,
+						idUser,
+						parent_id,
+						caption
+					])
 					await updateIdImages(
 						'albums',
 						data[0].attributes.resource_id,

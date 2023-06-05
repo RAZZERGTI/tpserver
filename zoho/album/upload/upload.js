@@ -1,4 +1,5 @@
 const { uploadPhoto } = require('../upload/uploadPhoto')
+const { fourValues } = require('../../../database/db')
 
 const uploadImages = async (req, token, fileName) => {
 	return new Promise(async (resolve, reject) => {
