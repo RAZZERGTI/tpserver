@@ -75,6 +75,7 @@ const uploadFile = async (
 						`${parent_id}`,
 						reqBody.idUser,
 						reqBody.AlbumName,
+						reqBody.frame,
 						`${data[0].attributes.resource_id}`,
 						' ',
 						' '

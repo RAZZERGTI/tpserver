@@ -45,7 +45,7 @@ async function returnCode(table, mailOrId, value) {
 
 async function getTitle(arr, idUser) {
 	let inClause = arr.map(id => `'${id}'`).join(',')
-	let sql = `SELECT idAlbum, title, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`
+	let sql = `SELECT idAlbum, title, frame, idLogo  FROM albums  WHERE idAlbum IN (${inClause}) AND (idCreator = '${idUser}' OR idUsers = '${idUser}');`
 	let res = await new Promise((res, rej) =>
 		connection.query(sql, (err, results) => (err ? rej(err) : res(results)))
 	)
@@ -54,6 +54,7 @@ async function getTitle(arr, idUser) {
 	return res.map(item => ({
 		id: item.idAlbum,
 		title: item.title,
+		frame: item.frame,
 		idLogo: item.idLogo
 	}))
 }
@@ -100,12 +101,12 @@ async function fourValues(table, [value1, value2, value3, value4]) {
 }
 async function sixValues(
 	table,
-	[value1, value2, value3, value4, value5, value6]
+	[value1, value2, value3, value4, value5, value6, value7]
 ) {
 	await new Promise((res, rej) =>
 		connection.query(
-			`INSERT INTO ${table}(idAlbum, idCreator, title, idLogo, idImages, idUsers) VALUES (?, ?, ?, ?, ?, ?)`,
-			[value1, value2, value3, value4, value5, value6],
+			`INSERT INTO ${table}(idAlbum, idCreator, title, frame, idLogo, idImages, idUsers) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+			[value1, value2, value3, value4, value5, value6, value7],
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)

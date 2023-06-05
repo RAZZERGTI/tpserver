@@ -12,7 +12,6 @@ const uploadImages = async (req, token, fileName) => {
 			req,
 			fileName
 		)
-		const permalink = res.attributes.Permalink
 		const idImage = res.attributes.resource_id
 		resolve({
 			idPhoto: idImage
