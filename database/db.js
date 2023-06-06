@@ -52,8 +52,9 @@ async function getTitle(arr, idUser) {
 	console.log(sql)
 	console.log(res)
 	res.map(item => {
-		console.log(item)
+		console.log('Id - ', item.idLogo)
 		if (item.idLogo !== '') {
+			console.log('How????')
 			return {
 				id: item.idAlbum,
 				title: item.title,
