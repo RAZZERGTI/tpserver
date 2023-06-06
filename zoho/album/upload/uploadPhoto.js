@@ -49,7 +49,6 @@ const uploadFile = async (
 	reqBody
 ) => {
 	return new Promise(async (resolve, reject) => {
-		console.log(date)
 		console.log(name)
 		zWDApi.files
 			.upload({
