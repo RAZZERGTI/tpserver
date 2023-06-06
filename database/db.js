@@ -51,25 +51,12 @@ async function getTitle(arr, idUser) {
 	)
 	console.log(sql)
 	console.log(res)
-	res.map(item => {
-		console.log('Id - ', item.idLogo)
-		if (item.idLogo !== '') {
-			console.log('How????')
-			return ({
-				id: item.idAlbum,
-				title: item.title,
-				frame: item.frame,
-				idLogo: item.idLogo
-			})
-		} else {
-			return ({
-				id: item.idAlbum,
-				title: item.title,
-				frame: item.frame,
-				idLogo: item.idLogo
-			})
-		}
-	})
+	return res.map(item => ({
+		id: item.idAlbum,
+		title: item.title,
+		frame: item.frame,
+		idLogo: item.idLogo
+	}))
 }
 
 async function getPhotosByAlbumId(idAlbum) {
