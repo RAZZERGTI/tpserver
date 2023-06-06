@@ -20,8 +20,9 @@ const getAllFolders = async (req, token) => {
 			})
 			.then(async data => {
 				if (data.length > 0) {
-					const ids = data.map(item => item.id).reverse()
-					let obj = await getTitle(ids, idUser)
+					const ids = data.map(item => item.id)
+					let obj = await getTitle(ids, idUser).reverse()
+
 					resolve(obj)
 				} else {
 					resolve({})
