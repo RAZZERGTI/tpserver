@@ -57,7 +57,7 @@ async function getTitle(arr, idUser) {
 		frame: item.frame,
 // 		idLogo: item.idLogo
 		...(item.idLogo !== '' && { idLogo: item.idLogo })
-	}))
+	})).reverse()
 }
 
 async function getPhotosByAlbumId(idAlbum) {
