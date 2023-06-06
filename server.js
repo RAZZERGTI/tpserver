@@ -233,6 +233,7 @@ app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 		const array = getPhotos.idImages
 			.split(' ')
 			.filter(element => element !== '')
+			.reverse()
 		res.send({
 			idImages: array
 		})
