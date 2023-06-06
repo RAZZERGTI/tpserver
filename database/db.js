@@ -65,7 +65,8 @@ async function getTitle(arr, idUser) {
 			return {
 				id: item.idAlbum,
 				title: item.title,
-				frame: item.frame
+				frame: item.frame,
+				idLogo: item.idLogo
 			}
 		}
 	})
