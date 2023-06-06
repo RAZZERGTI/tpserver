@@ -55,19 +55,19 @@ async function getTitle(arr, idUser) {
 		console.log('Id - ', item.idLogo)
 		if (item.idLogo !== '') {
 			console.log('How????')
-			return {
+			return ({
 				id: item.idAlbum,
 				title: item.title,
 				frame: item.frame,
 				idLogo: item.idLogo
-			}
+			})
 		} else {
-			return {
+			return ({
 				id: item.idAlbum,
 				title: item.title,
 				frame: item.frame,
 				idLogo: item.idLogo
-			}
+			})
 		}
 	})
 }
