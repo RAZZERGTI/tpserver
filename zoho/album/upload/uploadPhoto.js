@@ -11,16 +11,6 @@ require('dotenv').config()
 
 const url = 'eu'
 
-let date = new Date()
-	.toLocaleString('en-US', {
-		hour12: false,
-		timeZone: 'UTC'
-	})
-	.replace(/\./g, '-')
-	.replace(/,/g, '_')
-	.replace(/:/g, '-')
-	.replace(/ /g, '')
-
 const getPhotoFromDirectory = fileName => {
 	return new Promise((resolve, reject) => {
 		fs.readdir('images', (err, files) => {
@@ -121,6 +111,15 @@ const uploadPhoto = async (
 ) => {
 	return new Promise(async (resolve, reject) => {
 		try {
+			let date = new Date()
+				.toLocaleString('en-US', {
+					hour12: false,
+					timeZone: 'Europe/Minsk'
+				})
+				.replace(/\./g, '-')
+				.replace(/,/g, '_')
+				.replace(/:/g, '-')
+				.replace(/ /g, '')
 			const zWDApi = new ZWorkDriveApi(token, url)
 			const filePath = await getPhotoFromDirectory(fileName)
 			const extensionReg = filePath.match(/\.(jpg|jpeg|png)$/i)

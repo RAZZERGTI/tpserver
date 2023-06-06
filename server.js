@@ -22,7 +22,7 @@ const { getPhotosByAlbum } = require('./zoho/album/getPhotos/getPhotosByAlbum')
 const cors = require('cors')
 const { getUserById } = require('./users/getUserById')
 const bodyParser = require('body-parser')
-const { setTitleById, fourValues } = require('./database/db')
+const { setTitleById, fourValues, getCaption } = require('./database/db')
 const {
 	getInfoAlbumById
 } = require('./zoho/album/getInfoAlbumById/getInfoAlbumById')
@@ -229,12 +229,11 @@ app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 	try {
 		const { resource_id } = req.params
 		const getPhotos = await getPhotosByAlbum(token, resource_id)
-		const array = getPhotos.idImages
+		let arr = getPhotos.idImages
 			.split(' ')
 			.filter(element => element !== '')
-		res.send({
-			idImages: array
-		})
+			.reverse()
+		res.send(await getCaption(arr))
 	} catch (e) {
 		return {
 			error: {
@@ -296,7 +295,6 @@ app.post(
 	upload.array('imageUploads', 10),
 	async (req, res) => {
 		try {
-			console.log(req.body)
 			const senderName = req.body.fromName
 			const fileNames = req.files.map(file => file.originalname)
 			if (senderName == null) {

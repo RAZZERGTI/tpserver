@@ -42,6 +42,18 @@ async function returnCode(table, mailOrId, value) {
 	)
 	return res[0]
 }
+async function getCaption(arr) {
+	let inClause = arr.map(id => `'${id}'`).join(',')
+	console.log(inClause)
+	let sql = `SELECT idPhoto, caption
+				FROM photos
+				WHERE idPhoto IN (${inClause});`
+	let res = await new Promise((res, rej) =>
+		connection.query(sql, (err, results) => (err ? rej(err) : res(results)))
+	)
+	console.log(sql)
+	return res
+}
 
 async function getTitle(arr, idUser) {
 	let inClause = arr.map(id => `'${id}'`).join(',')
@@ -51,22 +63,14 @@ async function getTitle(arr, idUser) {
 	)
 	console.log(sql)
 	console.log(res)
-	res.map(item => {
-		if (item.idLogo) {
-			return {
-				id: item.idAlbum,
-				title: item.title,
-				frame: item.frame,
-				idLogo: item.idLogo
-			}
-		} else {
-			return {
-				id: item.idAlbum,
-				title: item.title,
-				frame: item.frame
-			}
-		}
-	})
+	return res
+		.map(item => ({
+			id: item.idAlbum,
+			title: item.title,
+			frame: item.frame,
+			...(item.idLogo !== '' && { idLogo: item.idLogo })
+		}))
+		.reverse()
 }
 
 async function getPhotosByAlbumId(idAlbum) {
@@ -121,6 +125,7 @@ async function sixValues(
 		)
 	)
 }
+
 async function createSessionTable(table, [mail, code]) {
 	await new Promise((res, rej) =>
 		connection.query(
@@ -205,6 +210,7 @@ async function checkDbUserAuth(row, nameOrMail, password) {
 	return res[0]
 }
 module.exports = {
+	getCaption,
 	fourValues,
 	infoCheckDb,
 	returnCode,
