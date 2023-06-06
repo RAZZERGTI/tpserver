@@ -111,7 +111,9 @@ const uploadPhoto = async (
 	reqBody,
 	fileName
 ) => {
-	let date = new Date()
+	return new Promise(async (resolve, reject) => {
+		try {
+			let date = new Date()
 	.toLocaleString('en-US', {
 		hour12: false,
 		timeZone: 'Europe/Minsk'
@@ -120,8 +122,6 @@ const uploadPhoto = async (
 	.replace(/,/g, '_')
 	.replace(/:/g, '-')
 	.replace(/ /g, '')
-	return new Promise(async (resolve, reject) => {
-		try {
 			const zWDApi = new ZWorkDriveApi(token, url)
 			const filePath = await getPhotoFromDirectory(fileName)
 			const extensionReg = filePath.match(/\.(jpg|jpeg|png)$/i)
