@@ -14,7 +14,7 @@ const url = 'eu'
 let date = new Date()
 	.toLocaleString('en-US', {
 		hour12: false,
-		timeZone: 'UTC'
+		timeZone: 'Europe/Minsk'
 	})
 	.replace(/\./g, '-')
 	.replace(/,/g, '_')
