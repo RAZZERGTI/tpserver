@@ -183,6 +183,7 @@ app.get('/api/getAllAlbums?', async function (req, res) {
 		console.log(token)
 		let url = `${req.originalUrl}`
 		let getAll = await getAllFolders(url, token)
+		console.log('dasd --- ', getAll)
 		res.send(getAll)
 	} catch (e) {
 		return {
