@@ -26,6 +26,7 @@ const { setTitleById, fourValues, getCaption } = require('./database/db')
 const {
 	getInfoAlbumById
 } = require('./zoho/album/getInfoAlbumById/getInfoAlbumById')
+const { downloadZipAlbum } = require('./zoho/album/downloadZip/downloadZip')
 getToken()
 
 const swaggerFile = JSON.parse(fs.readFileSync('./swagger/output.json'))
@@ -244,6 +245,23 @@ app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 		}
 	}
 })
+app.get('/api/downloadZip/:resource_id', async function (req, res) {
+	try {
+		const { resource_id } = req.params
+		console.log(token)
+		const downloadZip = await downloadZipAlbum(token, resource_id)
+
+		// res.send(await getCaption(arr))
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
 // const example = require('./posts/Example-CreateAlbum')
 app.post(
 	'/api/createAlbum',
@@ -276,10 +294,12 @@ app.post(
 		}
 	}
 )
-app.post('/api/photoCaption', async (req, res) => {
+
+app.post('/api/sendReport', async (req, res) => {
 	try {
-		const { idPhoto, idUser, idAlbum, caption } = req.body
-		await fourValues('photos', [idPhoto, idUser, idAlbum, caption])
+		const { idPhoto, idAlbum, idUser, indexReport } = req.body
+		console.log(idPhoto, idAlbum, idUser, indexReport)
+		await fourValues('reports', [idPhoto, idUser, idAlbum, indexReport])
 		res.send({
 			response: true
 		})

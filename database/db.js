@@ -105,10 +105,11 @@ async function checkSessReductionCode(mail, code) {
 
 //INSERTS
 async function fourValues(table, [value1, value2, value3, value4]) {
+	let inClause = value4.map(id => `${id}`).join(',')
 	await new Promise((res, rej) =>
 		connection.query(
-			`INSERT INTO ${table}(idPhoto, idUser, idAlbum, caption) VALUES (?, ?, ?, ?)`,
-			[value1, value2, value3, value4],
+			`INSERT INTO ${table}(idPhoto, idUser, idAlbum, indexReport) VALUES (?, ?, ?, ?)`,
+			[value1, value2, value3, inClause],
 			(err, results) => (err ? rej(err) : res(results))
 		)
 	)
