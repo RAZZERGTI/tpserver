@@ -4,16 +4,16 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	host: dbHost,
-	user: dbUser,
-	password: dbPassword,
-	database: 'tpmobile',
-	port: 3306
-// 	host: 'localhost',
-// 	user: 'root',
-// 	password: 'root',
-// 	database: 'user1026_tp',
-// 	port: 3307
+	// host: dbHost,
+	// user: dbUser,
+	// password: dbPassword,
+	// database: 'tpmobile',
+	// port: 3306
+	host: 'localhost',
+	user: 'root',
+	password: 'root',
+	database: 'user1026_tp',
+	port: 3307
 })
 async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
@@ -104,6 +104,15 @@ async function checkSessReductionCode(mail, code) {
 }
 
 //INSERTS
+async function fourValuesCaption(table, [value1, value2, value3, value4]) {
+	await new Promise((res, rej) =>
+		connection.query(
+			`INSERT INTO ${table}(idPhoto, idUser, idAlbum, caption) VALUES (?, ?, ?, ?)`,
+			[value1, value2, value3, value4],
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
 async function fourValues(table, [value1, value2, value3, value4]) {
 	let inClause = value4.map(id => `${id}`).join(',')
 	await new Promise((res, rej) =>
@@ -211,6 +220,7 @@ async function checkDbUserAuth(row, nameOrMail, password) {
 	return res[0]
 }
 module.exports = {
+	fourValuesCaption,
 	getCaption,
 	fourValues,
 	infoCheckDb,
