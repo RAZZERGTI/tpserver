@@ -72,7 +72,15 @@ async function getTitle(arr, idUser) {
 		}))
 		.reverse()
 }
-
+async function getFeelById(idUser) {
+	let res = await new Promise((res, rej) =>
+		connection.query(
+			`select idPhoto, caption from photos where idUser='${idUser}';`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+	return res
+}
 async function getPhotosByAlbumId(idAlbum) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
@@ -220,6 +228,7 @@ async function checkDbUserAuth(row, nameOrMail, password) {
 	return res[0]
 }
 module.exports = {
+	getFeelById,
 	fourValuesCaption,
 	getCaption,
 	fourValues,

@@ -22,7 +22,12 @@ const { getPhotosByAlbum } = require('./zoho/album/getPhotos/getPhotosByAlbum')
 const cors = require('cors')
 const { getUserById } = require('./users/getUserById')
 const bodyParser = require('body-parser')
-const { setTitleById, fourValues, getCaption } = require('./database/db')
+const {
+	setTitleById,
+	fourValues,
+	getCaption,
+	getFeelById
+} = require('./database/db')
 const {
 	getInfoAlbumById
 } = require('./zoho/album/getInfoAlbumById/getInfoAlbumById')
@@ -225,7 +230,21 @@ app.get('/api/download/:resource_id', async function (req, res) {
 		}
 	}
 })
-
+app.get('/api/getFeel/:idUser', async function (req, res) {
+	try {
+		const { idUser } = req.params
+		const getFeel = await getFeelById(idUser)
+		res.send(getFeel)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
 app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 	try {
 		const { resource_id } = req.params
@@ -249,7 +268,7 @@ app.get('/api/downloadZip/:resource_id', async function (req, res) {
 	try {
 		const { resource_id } = req.params
 		console.log(token)
-		const downloadZip = await downloadZipAlbum(token, resource_id)
+		// const downloadZip = await downloadZipAlbum(token, resource_id)
 
 		// res.send(await getCaption(arr))
 	} catch (e) {
