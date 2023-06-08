@@ -316,6 +316,8 @@ app.post(
 
 app.post('/api/sendReport', async (req, res) => {
 	try {
+		contole.log('Req  body - ', req.body)
+		contole.log(req)
 		const { idPhoto, idAlbum, idUser, indexReport } = req.body
 		console.log(idPhoto, idAlbum, idUser, indexReport)
 		await fourValues('reports', [idPhoto, idUser, idAlbum, indexReport])
