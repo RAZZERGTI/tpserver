@@ -45,6 +45,7 @@ const deletePhoto = async (token, id, parent_id, action) => {
 			await deleteFile(zWDApi, id, token)
 			if (action === 'photo') {
 				await updateDelete('albums', id, 'idImages', parent_id)
+				await deleteRow('photos', 'idPhoto', id)
 			} else if (action === 'logo') {
 				await updateDelete('albums', id, 'idLogo', parent_id)
 			} else {
@@ -56,6 +57,7 @@ const deletePhoto = async (token, id, parent_id, action) => {
 			await deleteFile(zWDApi, parent_id, token)
 			if (action === 'album') {
 				await deleteRow('albums', 'idAlbum', parent_id)
+				await deleteRow('photos', 'idAlbum', parent_id)
 			} else {
 				return false
 			}

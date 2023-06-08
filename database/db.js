@@ -4,16 +4,16 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	host: dbHost,
-	user: dbUser,
-	password: dbPassword,
-	database: 'tpmobile',
-	port: 3306
-// 	host: 'localhost',
-// 	user: 'root',
-// 	password: 'root',
-// 	database: 'user1026_tp',
-// 	port: 3307
+	// host: dbHost,
+	// user: dbUser,
+	// password: dbPassword,
+	// database: 'tpmobile',
+	// port: 3306
+	host: 'localhost',
+	user: 'root',
+	password: 'root',
+	database: 'user1026_tp',
+	port: 3307
 })
 async function infoCheckDb(table, nameField, value) {
 	let res = await new Promise((res, rej) =>
@@ -72,7 +72,7 @@ async function getTitle(arr, idUser) {
 		}))
 		.reverse()
 }
-async function getFeelById(idUser) {
+async function getFeedById(idUser) {
 	let res = await new Promise((res, rej) =>
 		connection.query(
 			`select idPhoto, caption from photos where idUser='${idUser}';`,
@@ -228,7 +228,7 @@ async function checkDbUserAuth(row, nameOrMail, password) {
 	return res[0]
 }
 module.exports = {
-	getFeelById,
+	getFeedById,
 	fourValuesCaption,
 	getCaption,
 	fourValues,

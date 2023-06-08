@@ -26,7 +26,7 @@ const {
 	setTitleById,
 	fourValues,
 	getCaption,
-	getFeelById
+	getFeedById
 } = require('./database/db')
 const {
 	getInfoAlbumById
@@ -230,11 +230,11 @@ app.get('/api/download/:resource_id', async function (req, res) {
 		}
 	}
 })
-app.get('/api/getFeel/:idUser', async function (req, res) {
+app.get('/api/getFeed/:idUser', async function (req, res) {
 	try {
 		const { idUser } = req.params
-		const getFeel = await getFeelById(idUser)
-		res.send(getFeel)
+		const getFeed = await getFeedById(idUser)
+		res.send(getFeed)
 	} catch (e) {
 		return {
 			error: {
