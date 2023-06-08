@@ -266,10 +266,24 @@ app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 })
 app.get('/api/downloadZip/:resource_id', async function (req, res) {
 	try {
+		let date = new Date()
+			.toLocaleString('en-US', {
+				hour12: false,
+				timeZone: 'Europe/Minsk'
+			})
+			.replace(/\./g, '-')
+			.replace(/,/g, '_')
+			.replace(/:/g, '-')
+			.replace(/ /g, '')
 		const { resource_id } = req.params
 		console.log(token)
-		// const downloadZip = await downloadZipAlbum(token, resource_id)
-
+		const downloadZip = await downloadZipAlbum(token, resource_id)
+		res.setHeader(
+			'Content-Disposition',
+			`attachment; filename=photo_${date}.${downloadZip.extension}`
+		)
+		res.setHeader('Content-Type', `image/${downloadZip.extension}`)
+		res.send(downloadZip.data)
 		// res.send(await getCaption(arr))
 	} catch (e) {
 		return {

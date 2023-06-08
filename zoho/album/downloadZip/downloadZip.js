@@ -1,5 +1,6 @@
 const axios = require('axios')
 const { downloadProgress } = require('./downloadProgress')
+const { downloadPhoto } = require('../download/download')
 const downloadZipAlbum = async (token, resource_id) => {
 	let data = `{\r\n   data: {\r\n      attributes: {\r\n         resource_id: "${resource_id}"\r\n      },\r\n      type: "files"\r\n   }\r\n}`
 
@@ -19,7 +20,10 @@ const downloadZipAlbum = async (token, resource_id) => {
 		const response = await axios.request(config)
 		console.log(response)
 		const downProgress = await downloadProgress(token, response.data.wmsKey)
-		console.log(downProgress)
+		console.log(downProgress.docId)
+		const download = await downloadPhoto(token, downProgress.docId)
+		console.log(download)
+		return download
 		// return { data: response.data, extension }
 	} catch (error) {
 		console.log(error)
