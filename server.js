@@ -26,7 +26,8 @@ const {
 	setTitleById,
 	fourValues,
 	getCaption,
-	getFeedById
+	getFeedById,
+	getAllFields
 } = require('./database/db')
 const {
 	getInfoAlbumById
@@ -264,6 +265,22 @@ app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 		}
 	}
 })
+
+app.get('/api/getAllReports', async function (req, res) {
+	try {
+		const report = await getAllFields('reports')
+		res.send(report)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+
 app.get('/api/downloadZip/:resource_id', async function (req, res) {
 	try {
 		let date = new Date()
