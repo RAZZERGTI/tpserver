@@ -27,7 +27,8 @@ const {
 	fourValues,
 	getCaption,
 	getFeedById,
-	getAllFields
+	getAllFields,
+	deleteRow
 } = require('./database/db')
 const {
 	getInfoAlbumById
@@ -409,7 +410,17 @@ app.post('/api/swapLogo', upload.array('imageUploads', 1), async (req, res) => {
 		res.send(e)
 	}
 })
-
+app.delete('/api/deleteReport/:resource_id', async (req, res) => {
+	try {
+		const { resource_id } = req.params
+		await deleteRow('reports', 'idPhoto', resource_id)
+		res.send({
+			response: true
+		})
+	} catch (e) {
+		res.send(e)
+	}
+})
 app.delete('/api/delete/:action/:parent_id/:resource_id?', async (req, res) => {
 	try {
 		const { parent_id } = req.params
