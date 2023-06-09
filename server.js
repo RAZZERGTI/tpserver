@@ -28,7 +28,10 @@ const {
 	getCaption,
 	getFeedById,
 	getAllFields,
-	deleteRow
+	deleteRow,
+	threeValuesLikes,
+	valuesLikes,
+	getFieldsByRow
 } = require('./database/db')
 const {
 	getInfoAlbumById
@@ -266,7 +269,38 @@ app.get('/api/getPhotoByAlbum/:resource_id', async function (req, res) {
 		}
 	}
 })
-
+app.get('/api/like/:idUser', async function (req, res) {
+	try {
+		const { idUser } = req.params
+		const getFields = await getFieldsByRow('likes', 'idUser', idUser)
+		res.send(getFields)
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+app.delete('/api/like/:resource_id', async function (req, res) {
+	try {
+		const { resource_id } = req.params
+		const deleteFields = await deleteRow('likes', 'idPhoto', resource_id)
+		res.send({
+			response: true
+		})
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
 app.get('/api/getAllReports', async function (req, res) {
 	try {
 		const report = await getAllFields('reports')
@@ -345,6 +379,24 @@ app.post(
 		}
 	}
 )
+
+app.post('/api/like', async (req, res) => {
+	try {
+		const { idUser, idAlbum, idPhoto } = req.body
+		let date = new Date().toLocaleString('en-US', {
+			hour12: false,
+			timeZone: 'Europe/Minsk'
+		})
+		await valuesLikes('likes', [idPhoto, idAlbum, idUser, date])
+		res.send({
+			response: true
+		})
+	} catch (error) {
+		// Обработка ошибок, если таковые возникли при выполнении операций
+		console.error('Ошибка при обработке запроса:', error)
+		res.status(500).json({ error: 'Внутренняя ошибка сервера.' })
+	}
+})
 
 app.post('/api/sendReport', async (req, res) => {
 	try {

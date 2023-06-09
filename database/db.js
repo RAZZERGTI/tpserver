@@ -4,16 +4,16 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	host: dbHost,
-	user: dbUser,
-	password: dbPassword,
-	database: 'tpmobile',
-	port: 3306
-// 	host: 'localhost',
-// 	user: 'root',
-// 	password: 'root',
-// 	database: 'user1026_tp',
-// 	port: 3307
+	// host: dbHost,
+	// user: dbUser,
+	// password: dbPassword,
+	// database: 'tpmobile',
+	// port: 3306
+	host: 'localhost',
+	user: 'root',
+	password: 'root',
+	database: 'user1026_tp',
+	port: 3307
 })
 
 async function infoCheckDb(table, nameField, value) {
@@ -33,6 +33,14 @@ async function checkField(table, nameField, nameFieldCondition, value) {
 		)
 	)
 	return res[0]
+}
+async function getFieldsByRow(table, nameFieldCondition, value) {
+	return await new Promise((res, rej) =>
+		connection.query(
+			`SELECT * FROM ${table} WHERE ${nameFieldCondition}='${value}'`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
 }
 async function getAllFields(table) {
 	return await new Promise((res, rej) =>
@@ -124,6 +132,15 @@ async function fourValuesCaption(table, [value1, value2, value3, value4]) {
 	await new Promise((res, rej) =>
 		connection.query(
 			`INSERT INTO ${table}(idPhoto, idUser, idAlbum, caption) VALUES (?, ?, ?, ?)`,
+			[value1, value2, value3, value4],
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
+async function valuesLikes(table, [value1, value2, value3, value4]) {
+	await new Promise((res, rej) =>
+		connection.query(
+			`INSERT INTO ${table}(idPhoto, idAlbum, idUser, timestamp) VALUES (?, ?, ?, ?)`,
 			[value1, value2, value3, value4],
 			(err, results) => (err ? rej(err) : res(results))
 		)
@@ -236,6 +253,8 @@ async function checkDbUserAuth(row, nameOrMail, password) {
 	return res[0]
 }
 module.exports = {
+	getFieldsByRow,
+	valuesLikes,
 	getAllFields,
 	getFeedById,
 	fourValuesCaption,
