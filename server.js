@@ -276,6 +276,21 @@ app.get('/api/like/:idUser', async function (req, res) {
 	try {
 		const { idUser } = req.params
 		const getFields = await getFieldsByRow('likes', 'idUser', idUser)
+		const idPhotos = getFields.map(item => item.idPhoto)
+		const getCaptionByIdPhotos = await getCaption(idPhotos)
+		const result = getFields.map(album => {
+			const idPhoto = album.idPhoto
+			const matchingCaption = getCaptionByIdPhotos.find(
+				photo => photo.idPhoto === idPhoto
+			)
+			const caption =
+				matchingCaption && matchingCaption.caption
+					? matchingCaption.caption
+					: undefined
+			return { ...album, ...(caption && { caption }) }
+		})
+
+		console.log(result)
 		res.send(getFields)
 	} catch (e) {
 		return {
@@ -402,7 +417,7 @@ app.post(
 
 app.post('/api/like', async (req, res) => {
 	try {
-		const { idUser, idAlbum, idPhoto } = req.body
+		const { idUser, idAlbum, idPhoto, caption } = req.body
 		let date = new Date().toLocaleString('en-US', {
 			hour12: false,
 			timeZone: 'Europe/Minsk'

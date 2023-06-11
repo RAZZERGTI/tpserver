@@ -4,16 +4,16 @@ const dbHost = process.env.DB_HOST
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 const connection = mysql.createConnection({
-	host: dbHost,
-	user: dbUser,
-	password: dbPassword,
-	database: 'tpmobile',
-	port: 3306
-// 	host: 'localhost',
-// 	user: 'root',
-// 	password: 'root',
-// 	database: 'user1026_tp',
-// 	port: 3307
+	// host: dbHost,
+	// user: dbUser,
+	// password: dbPassword,
+	// database: 'tpmobile',
+	// port: 3306
+	host: 'localhost',
+	user: 'root',
+	password: 'root',
+	database: 'user1026_tp',
+	port: 3307
 })
 
 async function infoCheckDb(table, nameField, value) {
@@ -42,6 +42,7 @@ async function getFieldsByRow(table, nameFieldCondition, value) {
 		)
 	)
 }
+
 async function getLastPhotoByIdUser(table, nameFieldCondition, value) {
 	return await new Promise((res, rej) =>
 		connection.query(
@@ -68,14 +69,12 @@ async function returnCode(table, mailOrId, value) {
 }
 async function getCaption(arr) {
 	let inClause = arr.map(id => `'${id}'`).join(',')
-	console.log(inClause)
 	let sql = `SELECT idPhoto, caption
 				FROM photos
 				WHERE idPhoto IN (${inClause});`
 	let res = await new Promise((res, rej) =>
 		connection.query(sql, (err, results) => (err ? rej(err) : res(results)))
 	)
-	console.log(sql)
 	return res
 }
 
