@@ -31,7 +31,8 @@ const {
 	deleteRow,
 	threeValuesLikes,
 	valuesLikes,
-	getFieldsByRow
+	getFieldsByRow,
+	getLastPhotoByIdUser
 } = require('./database/db')
 const {
 	getInfoAlbumById
@@ -111,7 +112,9 @@ app.get('/api/authorization?', async function (req, res) {
 		}
 	}
 })
-
+const multer = require('multer')
+// const storage = multer.memoryStorage()
+// const upload = multer({ storage })
 app.get('/api/checkCode?', async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
@@ -316,6 +319,23 @@ app.get('/api/getAllReports', async function (req, res) {
 	}
 })
 
+app.get('/api/getLastPhoto/:idUser', async function (req, res) {
+	try {
+		const { idUser } = req.params
+		const lastPhoto = await getLastPhotoByIdUser('photos', 'idUser', idUser)
+		const lastElement = lastPhoto.pop()
+		res.send([lastElement])
+	} catch (e) {
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+
 app.get('/api/downloadZip/:resource_id', async function (req, res) {
 	try {
 		let date = new Date()
@@ -412,7 +432,112 @@ app.post('/api/sendReport', async (req, res) => {
 		res.status(500).json({ error: 'Внутренняя ошибка сервера.' })
 	}
 })
+// app.post(
+// 	'/api/uploadVideo',
+// 	upload.array('imageUploads', 10),
+// 	async (req, res) => {
+// 		try {
+// 			const senderName = req.body.fromName
+// 			const fileNames = req.files.map(file => file.originalname)
+// 			if (senderName == null) {
+// 				res.status(500).json({ error: `No senderName sent.` })
+// 				return
+// 			}
+// 			if (req.files == null) {
+// 				res
+// 					.status(500)
+// 					.json({ error: `${senderName} - Image uploads not found.` })
+// 			} else if (req.files.length === 0) {
+// 				res.status(500).json({ error: `${senderName} - No images sent.` })
+// 			} else {
+// 				console.log(req.body)
+// 				console.log(fileNames)
+// 			}
+// 		} catch (e) {
+// 			res.send(e)
+// 		}
+// 	}
+// )
 // const example = require('./posts/Example-Upload')
+const { createCanvas, loadImage, registerFont } = require('canvas')
+registerFont('path/font.ttf', { family: 'Font Name' })
+
+app.post('/upload', upload.single('photo'), async (req, res) => {
+	try {
+		const circles = JSON.parse(req.body.circles)
+		const rectangles = JSON.parse(req.body.rectangles)
+		const caption = req.body.caption
+		const color = req.body.color
+		const image = await loadImage(req.file.path)
+
+		const canvas = createCanvas(image.width, image.height)
+		const ctx = canvas.getContext('2d')
+
+		const centerX = canvas.width / 2
+		const centerY = canvas.height / 2
+
+		ctx.drawImage(image, 0, 0)
+
+		circles.forEach(circle => {
+			const { x, y } = circle
+			const circleRadius = 40
+			const circleX = centerX + x
+			const circleY = centerY + y
+			ctx.beginPath()
+			ctx.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI)
+			ctx.fillStyle = color ? color : 'blue'
+			ctx.fill()
+		})
+
+		rectangles.forEach(rectangle => {
+			const { x, y } = rectangle
+			const rectWidth = 100
+			const rectHeight = 50
+			const rectX = centerX + x - rectWidth / 2
+			const rectY = centerY + y - rectHeight / 2
+			ctx.fillStyle = color ? color : 'red'
+			ctx.fillRect(rectX, rectY, rectWidth, rectHeight)
+		})
+		if (caption) {
+			const fontSize = 50
+			const textWidth = ctx.measureText(caption).width
+			const textHeight = fontSize
+			const textX = centerX - textWidth / 2
+			const textY = centerY - textHeight / 2
+
+			ctx.font = `${fontSize}px "Font Name"`
+			ctx.textAlign = 'center'
+			ctx.textBaseline = 'middle'
+			ctx.fillStyle = 'rgba(255,255,255,0.66)'
+
+			ctx.translate(textX, textY)
+			ctx.rotate(Math.PI / 4)
+
+			ctx.fillText(caption, 0, 0)
+
+			ctx.rotate(-Math.PI / 4)
+			ctx.translate(-textX, -textY)
+		}
+
+		const modifiedPhotoPath = `images/modified-${Date.now()}.jpg`
+		const modifiedPhotoStream = canvas.createJPEGStream()
+		const writeStream = fs.createWriteStream(modifiedPhotoPath)
+		modifiedPhotoStream.pipe(writeStream)
+
+		writeStream.on('finish', () => {
+			res.json({ modifiedPhoto: modifiedPhotoPath })
+		})
+
+		writeStream.on('error', error => {
+			console.error('Ошибка при сохранении фотографии:', error)
+			res.status(500).json({ error: 'Ошибка при сохранении фотографии' })
+		})
+	} catch (error) {
+		console.error('Ошибка при обработке фотографии:', error)
+		res.status(500).json({ error: 'Ошибка при обработке фотографии' })
+	}
+})
+
 app.post(
 	'/api/uploadPhoto',
 	upload.array('imageUploads', 10),
@@ -462,6 +587,7 @@ app.post('/api/swapLogo', upload.array('imageUploads', 1), async (req, res) => {
 		res.send(e)
 	}
 })
+
 app.delete('/api/deleteReport/:resource_id', async (req, res) => {
 	try {
 		const { resource_id } = req.params
