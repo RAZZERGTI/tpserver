@@ -276,22 +276,27 @@ app.get('/api/like/:idUser', async function (req, res) {
 	try {
 		const { idUser } = req.params
 		const getFields = await getFieldsByRow('likes', 'idUser', idUser)
-		const idPhotos = getFields.map(item => item.idPhoto)
-		const getCaptionByIdPhotos = await getCaption(idPhotos)
-		const result = getFields.map(album => {
-			const idPhoto = album.idPhoto
-			const matchingCaption = getCaptionByIdPhotos.find(
-				photo => photo.idPhoto === idPhoto
-			)
-			const caption =
-				matchingCaption && matchingCaption.caption
-					? matchingCaption.caption
-					: undefined
-			return { ...album, ...(caption && { caption }) }
-		})
-
-		console.log(result)
-		res.send(getFields)
+		console.log(getFields)
+		if (getFields.length > 0) {
+			const idPhotos = getFields.map(item => item.idPhoto)
+			console.log(idPhotos)
+			const getCaptionByIdPhotos = await getCaption(idPhotos)
+			console.log(getCaptionByIdPhotos)
+			const result = getFields.map(album => {
+				const idPhoto = album.idPhoto
+				const matchingCaption = getCaptionByIdPhotos.find(
+					photo => photo.idPhoto === idPhoto
+				)
+				const caption =
+					matchingCaption && matchingCaption.caption
+						? matchingCaption.caption
+						: undefined
+				return { ...album, ...(caption && { caption }) }
+			})
+			res.send(result)
+		} else {
+			res.send([])
+		}
 	} catch (e) {
 		return {
 			error: {

@@ -11,10 +11,10 @@ async function mailMessages(mail, code) {
 		}
 	})
 	let mailOptions = {
-		from: 'TP - Take a Photo',
+		from: 'TaP - Take a Photo',
 		to: `${mail}`,
-		subject: 'Код авторизации',
-		text: `Вот ваш код - ${code}`
+		subject: 'Код подтверждения',
+		text: `Ваш код - ${code}`
 	}
 	await transporter.sendMail(mailOptions, function (error, info) {
 		if (error) {

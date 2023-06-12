@@ -47,6 +47,7 @@ const deletePhoto = async (token, id, parent_id, action) => {
 				await updateDelete('albums', id, 'idImages', parent_id)
 				await deleteRow('photos', 'idPhoto', id)
 				await deleteRow('reports', 'idPhoto', id)
+				await deleteRow('likes', 'idPhoto', id)
 			} else if (action === 'logo') {
 				await updateDelete('albums', id, 'idLogo', parent_id)
 			} else {
@@ -60,6 +61,7 @@ const deletePhoto = async (token, id, parent_id, action) => {
 				await deleteRow('albums', 'idAlbum', parent_id)
 				await deleteRow('photos', 'idAlbum', parent_id)
 				await deleteRow('reports', 'idAlbum', parent_id)
+				await deleteRow('likes', 'idAlbum', parent_id)
 			} else {
 				return false
 			}
