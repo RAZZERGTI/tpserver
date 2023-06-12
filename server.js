@@ -475,17 +475,19 @@ app.post('/api/sendReport', async (req, res) => {
 // )
 // const example = require('./posts/Example-Upload')
 const { createCanvas, loadImage, registerFont } = require('canvas')
-registerFont('path/font.ttf', { family: 'Font Name' })
-
+registerFont('path/popins.ttf', { family: 'Font Name' })
 app.post('/upload', upload.single('photo'), async (req, res) => {
 	try {
 		const circles = JSON.parse(req.body.circles)
 		const rectangles = JSON.parse(req.body.rectangles)
-		const caption = req.body.caption
+		const caption = req.body.waterMark
 		const color = req.body.color
+		const border = req.body.border
+
 		const image = await loadImage(req.file.path)
 
 		const canvas = createCanvas(image.width, image.height)
+
 		const ctx = canvas.getContext('2d')
 
 		const centerX = canvas.width / 2
@@ -493,26 +495,37 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
 
 		ctx.drawImage(image, 0, 0)
 
-		circles.forEach(circle => {
-			const { x, y } = circle
-			const circleRadius = 40
-			const circleX = centerX + x
-			const circleY = centerY + y
-			ctx.beginPath()
-			ctx.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI)
-			ctx.fillStyle = color ? color : 'blue'
-			ctx.fill()
-		})
+		if (border) {
+			const borderWidth = 5
+			const borderColor = color ? color : 'red'
 
-		rectangles.forEach(rectangle => {
-			const { x, y } = rectangle
-			const rectWidth = 100
-			const rectHeight = 50
-			const rectX = centerX + x - rectWidth / 2
-			const rectY = centerY + y - rectHeight / 2
-			ctx.fillStyle = color ? color : 'red'
-			ctx.fillRect(rectX, rectY, rectWidth, rectHeight)
-		})
+			ctx.lineWidth = borderWidth
+			ctx.strokeStyle = borderColor
+			ctx.strokeRect(0, 0, canvas.width, canvas.height)
+		}
+		if (circles) {
+			circles.forEach(circle => {
+				const { x, y } = circle
+				const circleRadius = 40
+				const circleX = centerX + x
+				const circleY = centerY + y
+				ctx.beginPath()
+				ctx.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI)
+				ctx.fillStyle = color ? color : 'blue'
+				ctx.fill()
+			})
+		}
+		if (rectangles) {
+			rectangles.forEach(rectangle => {
+				const { x, y } = rectangle
+				const rectWidth = 100
+				const rectHeight = 50
+				const rectX = centerX + x - rectWidth / 2
+				const rectY = centerY + y - rectHeight / 2
+				ctx.fillStyle = color ? color : 'red'
+				ctx.fillRect(rectX, rectY, rectWidth, rectHeight)
+			})
+		}
 		if (caption) {
 			const fontSize = 50
 			const textWidth = ctx.measureText(caption).width
@@ -523,7 +536,7 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
 			ctx.font = `${fontSize}px "Font Name"`
 			ctx.textAlign = 'center'
 			ctx.textBaseline = 'middle'
-			ctx.fillStyle = 'rgba(255,255,255,0.66)'
+			ctx.fillStyle = 'rgba(255, 255, 255, 0.25);'
 
 			ctx.translate(textX, textY)
 			ctx.rotate(Math.PI / 4)
@@ -533,14 +546,16 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
 			ctx.rotate(-Math.PI / 4)
 			ctx.translate(-textX, -textY)
 		}
-
-		const modifiedPhotoPath = `images/modified-${Date.now()}.jpg`
+		const fileName = `modified-${Date.now()}.jpg`
+		const modifiedPhotoPath = `images/${fileName}`
 		const modifiedPhotoStream = canvas.createJPEGStream()
 		const writeStream = fs.createWriteStream(modifiedPhotoPath)
 		modifiedPhotoStream.pipe(writeStream)
 
-		writeStream.on('finish', () => {
-			res.json({ modifiedPhoto: modifiedPhotoPath })
+		writeStream.on('finish', async () => {
+			fs.unlink(req.file.path, () => console.log('File deleted'))
+			const uploadPhoto = await uploadImages(req.body, token, fileName)
+			res.send(uploadPhoto)
 		})
 
 		writeStream.on('error', error => {
