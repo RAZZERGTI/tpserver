@@ -68,6 +68,10 @@ app.put('/editTitle/:album_id', async (req, res) => {
 		const requestBody = req.body.body
 		const parsedBody = JSON.parse(requestBody)
 		const newTitle = parsedBody.title
+		console.log(albumId)
+		console.log(requestBody)
+		console.log(parsedBody)
+		console.log(newTitle)
 		await setTitleById(newTitle, albumId)
 		res.status(200).json({ message: 'Название альбома успешно изменено.' })
 	} catch (e) {
