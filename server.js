@@ -65,12 +65,12 @@ app.get('/api/registration?', async function (req, res) {
 app.put('/editTitle/:album_id', async (req, res) => {
 	try {
 		const albumId = req.params.album_id
-		const requestBody = req.body.body
-		const parsedBody = JSON.parse(requestBody)
-		const newTitle = parsedBody.title
 		console.log(albumId)
+		const requestBody = req.body.body
 		console.log(requestBody)
+		const parsedBody = JSON.parse(requestBody)
 		console.log(parsedBody)
+		const newTitle = parsedBody.title
 		console.log(newTitle)
 		await setTitleById(newTitle, albumId)
 		res.status(200).json({ message: 'Название альбома успешно изменено.' })
