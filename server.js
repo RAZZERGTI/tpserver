@@ -197,7 +197,11 @@ app.get('/api/getAllAlbums?', async function (req, res) {
 		console.log(token)
 		let url = `${req.originalUrl}`
 		let getAll = await getAllFolders(url, token)
-		res.send(getAll)
+		if(getAll.length > 0){
+			res.send(getAll)
+		} else{
+			res.send([])	
+		}
 	} catch (e) {
 		return {
 			error: {
