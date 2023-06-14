@@ -66,9 +66,10 @@ app.put('/api/editTitle/:album_id', async (req, res) => {
 	try {
 		console.log('Hello')
 		const albumId = req.params.album_id
-		console.log(albumId)
+		console.log('Album id - ',albumId)
 		const requestBody = req.body.body
-		console.log(requestBody)
+		console.log('req  - ',req.body)
+		console.log('requestBody - ',requestBody)
 		const parsedBody = JSON.parse(requestBody)
 		console.log(parsedBody)
 		const newTitle = parsedBody.title
