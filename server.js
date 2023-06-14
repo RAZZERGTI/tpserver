@@ -62,7 +62,7 @@ app.get('/api/registration?', async function (req, res) {
 	}
 })
 
-app.put('/api/editTitle/:album_id', async (req, res) => {
+app.put('/editTitle/:album_id', async (req, res) => {
 	try {
 		console.log('Hello')
 		const albumId = req.params.album_id
