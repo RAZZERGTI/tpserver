@@ -46,6 +46,27 @@ app.use('/api/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(cors(), bodyParser.json())
 
+app.put('/api/editTitle/:album_id', async (req, res) => {
+	try {
+		const albumId = req.params.album_id
+		const requestBody = req.body.title
+		await setTitleById(requestBody, albumId)
+		res.status(200)
+		res.send({
+			response: true
+		})
+	} catch (e) {
+		console.log(e)
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+
 app.get('/api/registration?', async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
