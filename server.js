@@ -47,6 +47,27 @@ app.use('/api/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(cors(), bodyParser.json())
 
+app.put('/api/editTitle/:album_id', async (req, res) => {
+	try {
+		const albumId = req.params.album_id
+		const requestBody = req.body.title
+		await setTitleById(requestBody, albumId)
+		res.status(200)
+		res.send({
+			response: true
+		})
+	} catch (e) {
+		console.log(e)
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+
 app.get('/api/registration?', async function (req, res) {
 	try {
 		let url = `${req.originalUrl}`
@@ -65,10 +86,16 @@ app.get('/api/registration?', async function (req, res) {
 
 app.put('/editTitle/:album_id', async (req, res) => {
 	try {
+		console.log('Hello')
 		const albumId = req.params.album_id
+		console.log('Album id - ',albumId)
 		const requestBody = req.body.body
+		console.log('req  - ',req.body)
+		console.log('requestBody - ',requestBody)
 		const parsedBody = JSON.parse(requestBody)
+		console.log(parsedBody)
 		const newTitle = parsedBody.title
+		console.log(newTitle)
 		await setTitleById(newTitle, albumId)
 		res.status(200).json({ message: 'Название альбома успешно изменено.' })
 	} catch (e) {
@@ -240,7 +267,11 @@ app.get('/api/getAllAlbums?', async function (req, res) {
 		console.log(token)
 		let url = `${req.originalUrl}`
 		let getAll = await getAllFolders(url, token)
-		res.send(getAll)
+		if(getAll.length > 0){
+			res.send(getAll)
+		} else{
+			res.send([])	
+		}
 	} catch (e) {
 		return {
 			error: {
