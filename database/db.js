@@ -9,11 +9,11 @@ const connection = mysql.createConnection({
 	password: dbPassword,
 	database: 'tpmobile',
 	port: 3306
-// 	host: 'localhost',
-// 	user: 'root',
-// 	password: 'root',
-// 	database: 'user1026_tp',
-// 	port: 3307
+	// 	host: 'localhost',
+	// 	user: 'root',
+	// 	password: 'root',
+	// 	database: 'user1026_tp',
+	// 	port: 3307
 })
 
 async function infoCheckDb(table, nameField, value) {
@@ -224,6 +224,14 @@ async function setTitleById(title, id) {
 		)
 	)
 }
+async function setCaptionById(caption, id) {
+	let res = await new Promise((res, rej) =>
+		connection.query(
+			`UPDATE photos SET caption ='${caption}' WHERE idPhoto='${id}'`,
+			(err, results) => (err ? rej(err) : res(results))
+		)
+	)
+}
 async function updateLogo(table, value, idAlbum) {
 	await new Promise((res, rej) =>
 		connection.query(
@@ -260,6 +268,7 @@ async function checkDbUserAuth(row, nameOrMail, password) {
 	return res[0]
 }
 module.exports = {
+	setCaptionById,
 	getLastPhotoByIdUser,
 	getFieldsByRow,
 	valuesLikes,

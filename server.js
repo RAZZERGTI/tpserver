@@ -32,7 +32,8 @@ const {
 	threeValuesLikes,
 	valuesLikes,
 	getFieldsByRow,
-	getLastPhotoByIdUser
+	getLastPhotoByIdUser,
+	setCaptionById
 } = require('./database/db')
 const {
 	getInfoAlbumById
@@ -70,6 +71,48 @@ app.put('/editTitle/:album_id', async (req, res) => {
 		const newTitle = parsedBody.title
 		await setTitleById(newTitle, albumId)
 		res.status(200).json({ message: 'Название альбома успешно изменено.' })
+	} catch (e) {
+		console.log(e)
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+
+app.put('/api/editCaption/:photo_id', async (req, res) => {
+	try {
+		const photoId = req.params.photo_id
+		const caption = req.body.caption
+		await setCaptionById(caption, photoId)
+		res.status(200)
+		res.send({
+			response: true
+		})
+	} catch (e) {
+		console.log(e)
+		return {
+			error: {
+				statusCode: 500,
+				name: 'Internal Server Error',
+				message: `${e}`
+			}
+		}
+	}
+})
+
+app.put('/api/editTitle/:album_id', async (req, res) => {
+	try {
+		const albumId = req.params.album_id
+		const requestBody = req.body.title
+		await setTitleById(requestBody, albumId)
+		res.status(200)
+		res.send({
+			response: true
+		})
 	} catch (e) {
 		console.log(e)
 		return {
