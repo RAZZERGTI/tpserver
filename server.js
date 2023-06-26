@@ -446,7 +446,7 @@ app.get('/api/downloadZip/:resource_id', async function (req, res) {
 		const downloadZip = await downloadZipAlbum(token, resource_id)
 		res.setHeader(
 			'Content-Disposition',
-			`attachment; filename=photo_${date}.${downloadZip.extension}`
+			`attachment; filename=album_${date}.${downloadZip.extension}`
 		)
 		res.setHeader('Content-Type', `image/${downloadZip.extension}`)
 		res.send(downloadZip.data)
