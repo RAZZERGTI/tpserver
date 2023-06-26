@@ -3,7 +3,7 @@ const downloadProgress = async (token, wms) => {
 	let configProgress = {
 		method: 'get',
 		maxBodyLength: Infinity,
-		url: `https://www.zohoapis.eu/workdrive/downloadprogress?progressid=20091746419_${wms}`,
+		url: `https://www.zohoapis.eu/workdrive/downloadprogress?progressid=20092139315_${wms}`,
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Cookie:
